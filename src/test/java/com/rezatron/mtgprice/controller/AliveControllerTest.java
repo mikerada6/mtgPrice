@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -57,5 +58,8 @@ class AliveControllerTest {
         assertTrue( body.containsKey( "time" ) );
         assertEquals( time.toString(),
                       body.get( "time" ) );
+        assertTrue( body.containsKey( "baseFileLocation" ) );
+//        assertEquals("testValue",
+//                      body.get( "baseFileLocation" ) );
     }
 }
