@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public
 enum Rarity {
-    COMMON("common"),
-    UNCOMMON("uncommon"),
-    RARE("rare"),
-    SPECIAL("special"),
-    MYTHIC("mythic"),
-    BONUS("bonus"),
-    UNKNOWN( "unknown");
+    COMMON( "common" ),
+    UNCOMMON( "uncommon" ),
+    RARE( "rare" ),
+    SPECIAL( "special" ),
+    MYTHIC( "mythic" ),
+    BONUS( "bonus" ),
+    UNKNOWN( "unknown" );
 
 
     private final String shortName;
@@ -36,9 +36,9 @@ enum Rarity {
             case "bonus":
                 return Rarity.BONUS;
             default:
-                log.error("ShortName {} not supported.",
-                          shortName);
-                throw new IllegalArgumentException("ShortName [" + shortName + "] not supported.");
+                log.error( "ShortName {} not supported.",
+                           shortName );
+                throw new IllegalArgumentException( "ShortName [" + shortName + "] not supported." );
         }
     }
 

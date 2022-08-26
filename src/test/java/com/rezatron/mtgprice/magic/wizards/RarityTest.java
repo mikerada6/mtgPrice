@@ -2,7 +2,9 @@ package com.rezatron.mtgprice.magic.wizards;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RarityTest {
 
@@ -50,20 +52,23 @@ class RarityTest {
         assertEquals( Rarity.BONUS,
                       Rarity.fromShortName( "Bonus" ) );
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> Rarity.fromShortName( "Cool" ) );
+        Exception exception = assertThrows( IllegalArgumentException.class,
+                                            () -> Rarity.fromShortName( "Cool" ) );
         String expectedMessage = "ShortName [Cool] not supported.";
         String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue( actualMessage.contains( expectedMessage ) );
 
-        exception = assertThrows(IllegalArgumentException.class, () -> Rarity.fromShortName( "cool" ) );
+        exception = assertThrows( IllegalArgumentException.class,
+                                  () -> Rarity.fromShortName( "cool" ) );
         expectedMessage = "ShortName [cool] not supported.";
         actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue( actualMessage.contains( expectedMessage ) );
 
-        exception = assertThrows(IllegalArgumentException.class, () -> Rarity.fromShortName( "" ) );
+        exception = assertThrows( IllegalArgumentException.class,
+                                  () -> Rarity.fromShortName( "" ) );
         expectedMessage = "ShortName [] not supported.";
         actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue( actualMessage.contains( expectedMessage ) );
     }
 
     @Test

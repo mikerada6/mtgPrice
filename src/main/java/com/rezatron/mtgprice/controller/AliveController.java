@@ -40,7 +40,8 @@ class AliveController {
                   buildProperties.getVersion() );
         info.put( "time",
                   buildProperties.getTime().toString() );
-        info.put("baseFileLocation", baseFileLocation);
+        info.put( "baseFileLocation",
+                  baseFileLocation );
 
         log.info( "version - {}.",
                   info.get( "version" ) );
