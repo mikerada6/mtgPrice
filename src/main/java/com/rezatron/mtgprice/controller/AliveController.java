@@ -31,6 +31,7 @@ class AliveController {
     @GetMapping( "/version" )
     public
     ResponseEntity<HashMap<String, String>> version() {
+        log.info( "Version" );
         HashMap<String, String> info = new HashMap<>();
         info.put( "version",
                   buildProperties.getVersion() );
