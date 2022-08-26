@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import java.time.Instant;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith( MockitoExtension.class )
@@ -27,33 +29,33 @@ class AliveControllerTest {
     void alive() {
         ResponseEntity<String> response = aliveController.alive();
 
-        assertNotNull(response);
+        assertNotNull( response );
         assertEquals( HttpStatus.OK,
-                      response.getStatusCode());
+                      response.getStatusCode() );
         String isAlive = response.getBody();
-        assertNotNull(isAlive);
-        assertEquals("alive",
-                     isAlive);
+        assertNotNull( isAlive );
+        assertEquals( "alive",
+                      isAlive );
     }
 
     @Test
     void version() {
         Instant time = Instant.now();
-        when(buildProperties.getVersion()).thenReturn("1.0.0");
-        when(buildProperties.getTime()).thenReturn(time);
+        when( buildProperties.getVersion() ).thenReturn( "1.0.0" );
+        when( buildProperties.getTime() ).thenReturn( time );
 
         ResponseEntity<HashMap<String, String>> response = aliveController.version();
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK,
-                     response.getStatusCode());
+        assertNotNull( response );
+        assertEquals( HttpStatus.OK,
+                      response.getStatusCode() );
         HashMap<String, String> body = response.getBody();
         assert body != null;
         assertTrue( body.containsKey( "version" ) );
-        assertEquals("1.0.0",
-                     body.get("version"));
-        assertTrue(body.containsKey("time"));
-        assertEquals(time.toString(),
-                     body.get("time"));
+        assertEquals( "1.0.0",
+                      body.get( "version" ) );
+        assertTrue( body.containsKey( "time" ) );
+        assertEquals( time.toString(),
+                      body.get( "time" ) );
     }
 }
