@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping( "/api" )
+@RequestMapping( "/api/v1" )
 @Slf4j
 public
 class AliveController {
