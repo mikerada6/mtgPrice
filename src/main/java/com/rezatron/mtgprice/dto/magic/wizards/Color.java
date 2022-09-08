@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.magic.wizards;
+package com.rezatron.mtgprice.dto.magic.wizards;
 
 import lombok.extern.slf4j.Slf4j;
 

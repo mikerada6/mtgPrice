@@ -1,8 +1,8 @@
 package com.rezatron.mtgprice.repository;
 
-import com.rezatron.mtgprice.dto.magic.Price;
+import com.rezatron.mtgprice.dto.magic.Deck;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public
-interface PriceRepository extends JpaRepository<Price, String> {
+interface DeckRepository extends JpaRepository<Deck, String> {
 }

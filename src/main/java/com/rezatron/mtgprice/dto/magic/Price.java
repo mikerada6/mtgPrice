@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.magic;
+package com.rezatron.mtgprice.dto.magic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
@@ -25,9 +26,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table( name = "Price",
+        indexes = {@Index( name = "idx_price_card_id_timestamp",
+                           columnList = "card_id, timestamp" )},
         uniqueConstraints = {@UniqueConstraint( name = "uc_price_timestamp_card_id",
                                                 columnNames = {"timestamp", "card_id"} )} )
-@ToString( exclude = {"card"} )
+@ToString
 @EqualsAndHashCode( exclude = {"id"} )
 @Entity
 public

@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.magic.scryfall;
+package com.rezatron.mtgprice.dto.magic.scryfall;
 
 import lombok.Data;
 

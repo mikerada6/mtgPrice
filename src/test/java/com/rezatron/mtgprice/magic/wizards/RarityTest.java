@@ -1,5 +1,6 @@
 package com.rezatron.mtgprice.magic.wizards;
 
+import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

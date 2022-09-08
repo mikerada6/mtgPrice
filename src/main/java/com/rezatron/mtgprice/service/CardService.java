@@ -1,20 +1,21 @@
 package com.rezatron.mtgprice.service;
 
-import com.rezatron.mtgprice.magic.Card;
-import com.rezatron.mtgprice.magic.CardFace;
-import com.rezatron.mtgprice.magic.CardFaceImages;
-import com.rezatron.mtgprice.magic.Images;
-import com.rezatron.mtgprice.magic.Price;
-import com.rezatron.mtgprice.magic.scryfall.ImageUris;
-import com.rezatron.mtgprice.magic.scryfall.ScryfallCard;
-import com.rezatron.mtgprice.magic.scryfall.ScryfallCardFace;
-import com.rezatron.mtgprice.magic.wizards.Color;
-import com.rezatron.mtgprice.magic.wizards.Rarity;
+import com.rezatron.mtgprice.dto.magic.Card;
+import com.rezatron.mtgprice.dto.magic.CardFace;
+import com.rezatron.mtgprice.dto.magic.CardFaceImages;
+import com.rezatron.mtgprice.dto.magic.Images;
+import com.rezatron.mtgprice.dto.magic.Price;
+import com.rezatron.mtgprice.dto.magic.scryfall.ImageUris;
+import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
+import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;
+import com.rezatron.mtgprice.dto.magic.wizards.Color;
+import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
 import com.rezatron.mtgprice.repository.CardFaceRepository;
 import com.rezatron.mtgprice.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,14 @@ class CardService {
 
     @Autowired
     CardFaceRepository cardFaceRepository;
+
+    @Transactional( readOnly = true )
+    public
+    Card findById(String id) {
+        log.info("findById {}.",
+                 id);
+        return cardRepository.findById(id).orElse(null);
+    }
 
     public
     Card updateCard(ScryfallCard scryfallCard, Optional<LocalDateTime> optionalTimestamp)
@@ -60,6 +69,8 @@ class CardService {
         card.setTypeLine( scryfallCard.getTypeLine() );
         card.setRarity( Rarity.fromShortName( scryfallCard.getRarity() ) );
         card.setLanguage( scryfallCard.getLangauage() );
+        card.setOracleId( scryfallCard.getOracleId() );
+        card.setOracleText( scryfallCard.getOracleText() );
         if (scryfallCard.getColors() != null) {
             card.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
                                         .collect( Collectors.toSet() ) );
@@ -94,7 +105,7 @@ class CardService {
             CardFace cardFaceA = cardFaceRepository.findById( card.getId() + "-A" ).orElse( new CardFace() );
             CardFace cardFaceB = cardFaceRepository.findById( card.getId() + "-B" ).orElse( new CardFace() );
 
-            cardFaceA.setId(card.getId() + "-A");
+            cardFaceA.setId( card.getId() + "-A" );
             cardFaceA.setName( scryfallCardFaces.get( 0 ).getName() );
             cardFaceA.setManaCost( scryfallCardFaces.get( 0 ).getManaCost() );
             cardFaceA.setTypeLine( scryfallCardFaces.get( 0 ).getTypeLine() );
@@ -105,12 +116,13 @@ class CardService {
             cardFaceA.setCard( card );
             ImageUris temp1 = scryfallCardFaces.get( 0 ).getImageUris();
             if (temp1 != null) {
-                cardFaceA.setImages( CardFaceImages.builder().artCrop( temp1.getArtCrop() ).borderCrop( temp1.getBorderCrop() )
-                                                   .large( temp1.getLarge() ).normal( temp1.getNormal() ).png( temp1.getPng() )
+                cardFaceA.setImages( CardFaceImages.builder().artCrop( temp1.getArtCrop() )
+                                                   .borderCrop( temp1.getBorderCrop() ).large( temp1.getLarge() )
+                                                   .normal( temp1.getNormal() ).png( temp1.getPng() )
                                                    .small( temp1.getSmall() ).cardFace( cardFaceA ).build() );
             }
 
-            cardFaceB.setId(card.getId() + "-B");
+            cardFaceB.setId( card.getId() + "-B" );
             cardFaceB.setName( scryfallCardFaces.get( 1 ).getName() );
             cardFaceB.setManaCost( scryfallCardFaces.get( 1 ).getManaCost() );
             cardFaceB.setTypeLine( scryfallCardFaces.get( 1 ).getTypeLine() );
@@ -121,8 +133,9 @@ class CardService {
 
             ImageUris temp2 = scryfallCardFaces.get( 1 ).getImageUris();
             if (temp2 != null) {
-                cardFaceB.setImages( CardFaceImages.builder().artCrop( temp2.getArtCrop() ).borderCrop( temp2.getBorderCrop() )
-                                                   .large( temp2.getLarge() ).normal( temp2.getNormal() ).png( temp2.getPng() )
+                cardFaceB.setImages( CardFaceImages.builder().artCrop( temp2.getArtCrop() )
+                                                   .borderCrop( temp2.getBorderCrop() ).large( temp2.getLarge() )
+                                                   .normal( temp2.getNormal() ).png( temp2.getPng() )
                                                    .small( temp2.getSmall() ).cardFace( cardFaceB ).build() );
             }
             cardFaceA.setCard( card );
@@ -139,5 +152,20 @@ class CardService {
     public
     List<Card> saveAll(List<Card> cardsToSave) {
         return cardRepository.saveAllAndFlush( cardsToSave );
+    }
+
+    public
+    List<String> getSuperTypes() {
+        List<String> typeLines = cardRepository.findDistinctTypeLines().stream().filter( t -> t != null )
+                                               .collect( Collectors.toList() );
+        Set<String> superTypes = new HashSet<>();
+        for (String typeLine : typeLines) {
+            String[] split = typeLine.split( "//" );
+            for (String splitTypeLine : split) {
+                String[] superType = splitTypeLine.split( " — " );
+                superTypes.add( superType[0].trim() );
+            }
+       }
+        return superTypes.stream().sorted().collect( Collectors.toList() );
     }
 }

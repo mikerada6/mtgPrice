@@ -1,20 +1,21 @@
 
-package com.rezatron.mtgprice.magic.scryfall;
+package com.rezatron.mtgprice.dto.magic.scryfall;
 
 import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
-public class CardFace {
+public class ScryfallCardFace implements Comparable<ScryfallCardFace>{
 
     @SerializedName("artist")
     private String mArtist;
     @SerializedName("artist_id")
     private String mArtistId;
     @SerializedName("colors")
-    private List<Object> mColors;
+    private List<String> mColors;
     @SerializedName("illustration_id")
     private String mIllustrationId;
     @SerializedName("image_uris")
@@ -46,11 +47,11 @@ public class CardFace {
         mArtistId = artistId;
     }
 
-    public List<Object> getColors() {
+    public List<String> getColors() {
         return mColors;
     }
 
-    public void setColors(List<Object> colors) {
+    public void setColors(List<String> colors) {
         mColors = colors;
     }
 
@@ -110,4 +111,12 @@ public class CardFace {
         mTypeLine = typeLine;
     }
 
+    @Override
+    public
+    int compareTo(
+            @NotNull
+            ScryfallCardFace o)
+    {
+        return mName.compareTo( o.getName() );
+    }
 }

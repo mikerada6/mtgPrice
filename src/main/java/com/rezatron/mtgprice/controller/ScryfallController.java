@@ -1,7 +1,6 @@
 package com.rezatron.mtgprice.controller;
 
-import com.rezatron.mtgprice.magic.scryfall.ScryfallCard;
-import com.rezatron.mtgprice.magic.Card;
+import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.service.CardService;
 import com.rezatron.mtgprice.service.FileService;
 import com.rezatron.mtgprice.service.ScryfallService;
@@ -12,7 +11,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping( "/api/v1/scryfall" )

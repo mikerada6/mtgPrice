@@ -1,5 +1,5 @@
 
-package com.rezatron.mtgprice.magic.scryfall;
+package com.rezatron.mtgprice.dto.magic.scryfall;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
