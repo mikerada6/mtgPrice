@@ -31,7 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table( name = "User" )
 @ToString()
-@EqualsAndHashCode( exclude = {"inventories"} )
+@EqualsAndHashCode( exclude = {"inventories", "decks"} )
 @Entity
 @Slf4j
 @JsonPropertyOrder({ "userName", "firstName", "lastName" })
@@ -84,5 +84,13 @@ class User {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+    }
+
+    @Override
+    public
+    String toString() {
+        return "User{" + "id='" + id + '\'' + ", userName='" + userName + '\'' + ", firstName='" + firstName + '\''
+               + ", lastName='" + lastName + '\'' + ", createDateTime=" + createDateTime + ", updateDateTime="
+               + updateDateTime + '}';
     }
 }

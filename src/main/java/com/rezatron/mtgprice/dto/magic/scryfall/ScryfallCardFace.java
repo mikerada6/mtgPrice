@@ -1,115 +1,49 @@
 
 package com.rezatron.mtgprice.dto.magic.scryfall;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.Generated;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
-public class ScryfallCardFace implements Comparable<ScryfallCardFace>{
+@JsonIgnoreProperties( ignoreUnknown = true )
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode()
+public class ScryfallCardFace implements Comparable<ScryfallCardFace> {
 
     @SerializedName("artist")
-    private String mArtist;
-    @SerializedName("artist_id")
-    private String mArtistId;
+    private String artist;
+    @SerializedName(value="artist_id", alternate={"artistId"})
+    private String artistId;
     @SerializedName("colors")
-    private List<String> mColors;
-    @SerializedName("illustration_id")
-    private String mIllustrationId;
-    @SerializedName("image_uris")
-    private ImageUris mImageUris;
-    @SerializedName("mana_cost")
-    private String mManaCost;
+    private List<String> colors;
+    @SerializedName(value="illustration_id", alternate={"illustrationId"})
+    private String illustrationId;
+    @SerializedName(value="image_uris", alternate={"imageUris"})
+    private ImageUris imageUris;
+    @SerializedName(value="mana_cost", alternate={"manaCost"})
+    private String manaCost;
     @SerializedName("name")
-    private String mName;
+    private String name;
     @SerializedName("object")
-    private String mObject;
-    @SerializedName("oracle_text")
-    private String mOracleText;
-    @SerializedName("type_line")
-    private String mTypeLine;
-
-    public String getArtist() {
-        return mArtist;
-    }
-
-    public void setArtist(String artist) {
-        mArtist = artist;
-    }
-
-    public String getArtistId() {
-        return mArtistId;
-    }
-
-    public void setArtistId(String artistId) {
-        mArtistId = artistId;
-    }
-
-    public List<String> getColors() {
-        return mColors;
-    }
-
-    public void setColors(List<String> colors) {
-        mColors = colors;
-    }
-
-    public String getIllustrationId() {
-        return mIllustrationId;
-    }
-
-    public void setIllustrationId(String illustrationId) {
-        mIllustrationId = illustrationId;
-    }
-
-    public ImageUris getImageUris() {
-        return mImageUris;
-    }
-
-    public void setImageUris(ImageUris imageUris) {
-        mImageUris = imageUris;
-    }
-
-    public String getManaCost() {
-        return mManaCost;
-    }
-
-    public void setManaCost(String manaCost) {
-        mManaCost = manaCost;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public String getObject() {
-        return mObject;
-    }
-
-    public void setObject(String object) {
-        mObject = object;
-    }
-
-    public String getOracleText() {
-        return mOracleText;
-    }
-
-    public void setOracleText(String oracleText) {
-        mOracleText = oracleText;
-    }
-
-    public String getTypeLine() {
-        return mTypeLine;
-    }
-
-    public void setTypeLine(String typeLine) {
-        mTypeLine = typeLine;
-    }
+    private String object;
+    @SerializedName(value="oracle_text", alternate={"oracleText"})
+    private String oracleText;
+    @SerializedName(value="type_line", alternate={"typeLine"})
+    private String typeLine;
 
     @Override
     public
@@ -117,6 +51,6 @@ public class ScryfallCardFace implements Comparable<ScryfallCardFace>{
             @NotNull
             ScryfallCardFace o)
     {
-        return mName.compareTo( o.getName() );
+        return name.compareTo( o.getName() );
     }
 }

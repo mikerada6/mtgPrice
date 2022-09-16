@@ -44,19 +44,10 @@ class CardService {
         return cardRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public
     Card updateCard(ScryfallCard scryfallCard, Optional<LocalDateTime> optionalTimestamp)
     {
-        if (!scryfallCard.getGames().contains( "paper" )) {
-            log.trace( "{} is not a paper card so it was not saved.",
-                       scryfallCard.getId() );
-            return null;
-        }
-        if (!scryfallCard.getLangauage().equalsIgnoreCase( "en" )) {
-            log.trace( "{} is not an english card so it was not saved.",
-                       scryfallCard.getId() );
-            return null;
-        }
         LocalDateTime timestamp = optionalTimestamp.orElse( LocalDateTime.now() );
         Card card = cardRepository.findById( scryfallCard.getId() ).orElse( new Card() );
         card.setId( scryfallCard.getId() );
@@ -65,7 +56,7 @@ class CardService {
         card.setMtgSetName( scryfallCard.getSetName() );
         card.setCollectorNumber( scryfallCard.getCollectorNumber() );
         card.setCmc( scryfallCard.getCmc() );
-        card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
+            card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
         card.setTypeLine( scryfallCard.getTypeLine() );
         card.setRarity( Rarity.fromShortName( scryfallCard.getRarity() ) );
         card.setLanguage( scryfallCard.getLangauage() );
@@ -149,6 +140,7 @@ class CardService {
         return card;
     }
 
+    @Transactional
     public
     List<Card> saveAll(List<Card> cardsToSave) {
         return cardRepository.saveAllAndFlush( cardsToSave );
@@ -167,5 +159,10 @@ class CardService {
             }
        }
         return superTypes.stream().sorted().collect( Collectors.toList() );
+    }
+
+    public
+    Card save(Card tempCard) {
+        return cardRepository.save(tempCard);
     }
 }

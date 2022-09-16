@@ -27,7 +27,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table( name = "Price",
         indexes = {@Index( name = "idx_price_card_id_timestamp",
-                           columnList = "card_id, timestamp" )},
+                           columnList = "card_id, timestamp" ), @Index( name = "idx_price_timestamp",
+                                                                        columnList = "timestamp" )},
         uniqueConstraints = {@UniqueConstraint( name = "uc_price_timestamp_card_id",
                                                 columnNames = {"timestamp", "card_id"} )} )
 @ToString
