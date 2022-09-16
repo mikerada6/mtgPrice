@@ -12,27 +12,23 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -42,14 +38,16 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "Card" )
-@ToString( exclude = {"prices", "inventories", "images","oracleText"} )
-@EqualsAndHashCode( exclude = {"prices", "inventories", "images"} )
+@Table( name = "Card",
+        indexes = {@Index( name = "idx_card_mtgset",
+                           columnList = "mtgSet" )} )
+@ToString
+@EqualsAndHashCode( exclude = {"prices", "inventories", "images", "decks"} )
 @Entity
 @Slf4j
 @JsonPropertyOrder( alphabetic = true )
 public
-class Card {
+class Card implements Comparable<Card> {
     @Id
     private String id;
     private String name;
@@ -107,8 +105,6 @@ class Card {
     private Set<Inventory> inventories = new LinkedHashSet<>();
 
 
-
-
     public
     void setCardFaces(Set<CardFace> cardFaces) {
         this.cardFaces.clear();
@@ -122,5 +118,70 @@ class Card {
     public
     void preUpdate() {
         cardTypes = CardType.getCardTypeFromScryFallTypeLine( typeLine ).stream().collect( Collectors.toSet() );
+    }
+
+    @Override
+    public
+    int compareTo(
+            @NotNull
+            Card o)
+    {
+        if (releasedAt.isBefore( o.getReleasedAt() )) {
+            return -1;
+        } else if (releasedAt.isAfter( o.getReleasedAt() )) {
+            return 1;
+        }
+        if (getColorRank() < o.getColorRank()) {
+            return -1;
+        }
+        if (getColorRank() > o.getColorRank()) {
+            return 1;
+        }
+        return name.compareTo( o.getName() );
+    }
+
+    public
+    int getColorRank()
+    {
+        if (colors.size() == 0 && !cardTypes.contains( CardType.LAND ) && !cardTypes.contains( CardType.ARTIFACT ))
+            if (cardTypes.contains( CardType.LAND )) {
+                return 9;
+            }
+
+        if (cardTypes.contains( CardType.BASICLAND )) {
+            return 10;
+        }
+        if (colors.size() == 1) {
+            if (colors.contains( Color.WHITE )) {
+                return 2;
+            }
+            if (colors.contains( Color.BLUE )) {
+                return 3;
+            }
+            if (colors.contains( Color.BLACK )) {
+                return 4;
+            }
+            if (colors.contains( Color.RED )) {
+                return 5;
+            }
+            if (colors.contains( Color.GREEN )) {
+                return 6;
+            }
+        }
+        if (colors.size() > 1) {
+            return 7;
+        }
+        return 8;
+    }
+
+    @Override
+    public
+    String toString() {
+        return "Card{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", mtgSet='" + mtgSet + '\'' + ", releasedAt="
+               + releasedAt + ", typeLine='" + typeLine + '\'' + ", language='" + language + '\'' + ", cmc='" + cmc
+               + '\'' + ", collectorNumber='" + collectorNumber + '\'' + ", oracleId='" + oracleId + '\''
+               + ", oracleText='" + oracleText + '\'' + ", colorIdentity=" + colorIdentity + ", colors=" + colors
+               + ", cardTypes=" + cardTypes + ", rarity=" + rarity + ", images=" + images + ", cardFaces=" + cardFaces
+               + '}';
     }
 }

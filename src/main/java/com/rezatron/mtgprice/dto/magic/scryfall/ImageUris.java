@@ -2,71 +2,39 @@
 package com.rezatron.mtgprice.dto.magic.scryfall;
 
 import javax.annotation.Generated;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
-public class ImageUris {
+import java.io.Serializable;
 
-    @SerializedName("art_crop")
-    private String mArtCrop;
-    @SerializedName("border_crop")
-    private String mBorderCrop;
+@JsonIgnoreProperties( ignoreUnknown = true )
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode()
+public class ImageUris implements Serializable {
+
+    @SerializedName(value="art_crop", alternate={"artCrop"})
+    private String artCrop;
+    @SerializedName(value="border_crop", alternate={"borderCrop"})
+    private String borderCrop;
     @SerializedName("large")
-    private String mLarge;
+    private String large;
     @SerializedName("normal")
-    private String mNormal;
+    private String normal;
     @SerializedName("png")
-    private String mPng;
+    private String png;
     @SerializedName("small")
-    private String mSmall;
+    private String small;
 
-    public String getArtCrop() {
-        return mArtCrop;
-    }
-
-    public void setArtCrop(String artCrop) {
-        mArtCrop = artCrop;
-    }
-
-    public String getBorderCrop() {
-        return mBorderCrop;
-    }
-
-    public void setBorderCrop(String borderCrop) {
-        mBorderCrop = borderCrop;
-    }
-
-    public String getLarge() {
-        return mLarge;
-    }
-
-    public void setLarge(String large) {
-        mLarge = large;
-    }
-
-    public String getNormal() {
-        return mNormal;
-    }
-
-    public void setNormal(String normal) {
-        mNormal = normal;
-    }
-
-    public String getPng() {
-        return mPng;
-    }
-
-    public void setPng(String png) {
-        mPng = png;
-    }
-
-    public String getSmall() {
-        return mSmall;
-    }
-
-    public void setSmall(String small) {
-        mSmall = small;
-    }
 
 }

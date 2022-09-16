@@ -2,73 +2,34 @@
 package com.rezatron.mtgprice.dto.magic.scryfall;
 
 import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
 
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
-public class RelatedUris {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties( ignoreUnknown = true )
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode()
+public class RelatedUris implements Serializable {
 
     @SerializedName("edhrec")
-    private String mEdhrec;
+    private String edhrec;
     @SerializedName("gatherer")
-    private String mGatherer;
+    private String gatherer;
     @SerializedName("tcgplayer_infinite_articles")
-    private String mTcgplayerInfiniteArticles;
+    private String tcgplayerInfiniteArticles;
     @SerializedName("tcgplayer_infinite_decks")
-    private String mTcgplayerInfiniteDecks;
-
-    public String getEdhrec() {
-        return mEdhrec;
-    }
-
-    public String getGatherer() {
-        return mGatherer;
-    }
-
-    public String getTcgplayerInfiniteArticles() {
-        return mTcgplayerInfiniteArticles;
-    }
-
-    public String getTcgplayerInfiniteDecks() {
-        return mTcgplayerInfiniteDecks;
-    }
-
-    public static class Builder {
-
-        private String mEdhrec;
-        private String mGatherer;
-        private String mTcgplayerInfiniteArticles;
-        private String mTcgplayerInfiniteDecks;
-
-        public RelatedUris.Builder withEdhrec(String edhrec) {
-            mEdhrec = edhrec;
-            return this;
-        }
-
-        public RelatedUris.Builder withGatherer(String gatherer) {
-            mGatherer = gatherer;
-            return this;
-        }
-
-        public RelatedUris.Builder withTcgplayerInfiniteArticles(String tcgplayerInfiniteArticles) {
-            mTcgplayerInfiniteArticles = tcgplayerInfiniteArticles;
-            return this;
-        }
-
-        public RelatedUris.Builder withTcgplayerInfiniteDecks(String tcgplayerInfiniteDecks) {
-            mTcgplayerInfiniteDecks = tcgplayerInfiniteDecks;
-            return this;
-        }
-
-        public RelatedUris build() {
-            RelatedUris relatedUris = new RelatedUris();
-            relatedUris.mEdhrec = mEdhrec;
-            relatedUris.mGatherer = mGatherer;
-            relatedUris.mTcgplayerInfiniteArticles = mTcgplayerInfiniteArticles;
-            relatedUris.mTcgplayerInfiniteDecks = mTcgplayerInfiniteDecks;
-            return relatedUris;
-        }
-
-    }
+    private String tcgplayerInfiniteDecks;
 
 }

@@ -78,4 +78,10 @@ class Inventory {
     void setFoil(boolean foil) {
         this.foil = foil;
     }
+
+    public String getCardId()
+    {
+        return card.getId();
+    }
+
 }

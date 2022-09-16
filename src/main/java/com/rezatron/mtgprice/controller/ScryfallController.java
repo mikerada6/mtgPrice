@@ -62,12 +62,10 @@ class ScryfallController {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( "Unable to read" );
         }
         List<ScryfallCard> cards = scryfallService.convertDTO( file );
-
-
-        long updatedCardCount = scryfallService.saveCards( cards,
-                                                           fileLocation );
+        scryfallService.sendMessages(cards, fileLocation);
         stopWatch.stop();
-        log.info("Bulk update is now completed {} records added in {}.", updatedCardCount, stopWatch.toString());
-        return ResponseEntity.status( HttpStatus.CREATED).body( updatedCardCount );
+        log.info("Bulk update is now completed {} records added to the queue in {}.", cards.size(),
+                 stopWatch.toString());
+        return ResponseEntity.status( HttpStatus.CREATED).body( cards.size() );
     }
 }
