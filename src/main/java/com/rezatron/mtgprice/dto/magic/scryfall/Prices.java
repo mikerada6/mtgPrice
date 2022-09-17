@@ -1,7 +1,4 @@
-
 package com.rezatron.mtgprice.dto.magic.scryfall;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
@@ -21,19 +18,23 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode()
-public class Prices implements Serializable {
+public
+class Prices implements Serializable {
 
-    @SerializedName("eur")
+    @SerializedName( "eur" )
     private Double eur;
-    @SerializedName(value="eur_foil", alternate={"eurFoil"})
+    @SerializedName( value = "eur_foil",
+                     alternate = {"eurFoil"} )
     private Double eurFoil;
-    @SerializedName("tix")
+    @SerializedName( "tix" )
     private Double tix;
-    @SerializedName("usd")
+    @SerializedName( "usd" )
     private Double usd;
-    @SerializedName(value="usd_etched", alternate={"usdEtched"})
+    @SerializedName( value = "usd_etched",
+                     alternate = {"usdEtched"} )
     private Double usdEtched;
-    @SerializedName(value="usd_foil", alternate={"usdFoil"})
+    @SerializedName( value = "usd_foil",
+                     alternate = {"usdFoil"} )
     private Double usdFoil;
 
 

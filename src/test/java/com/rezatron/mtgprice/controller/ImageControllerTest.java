@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,14 +43,13 @@ class ImageControllerTest {
         ;
         ResponseEntity response = imageController.basicSetup();
 
-        verify( fileService).createFolder("src/test/resources/images/set"  );
-        verify( fileService).createFolder("src/test/resources/images/color"  );
-        verify( fileService).createFolder("src/test/resources/images/type"  );
-        verify( fileService).createFolder("src/test/resources/images/rarity"  );
-        verify( fileService).createFolder("src/test/resources/images/all"  );
+        verify( fileService ).createFolder( "src/test/resources/images/set" );
+        verify( fileService ).createFolder( "src/test/resources/images/color" );
+        verify( fileService ).createFolder( "src/test/resources/images/type" );
+        verify( fileService ).createFolder( "src/test/resources/images/rarity" );
+        verify( fileService ).createFolder( "src/test/resources/images/all" );
 
         verify( imageService ).saveAllImages();
-
 
 
         assertNotNull( response );
@@ -63,7 +60,8 @@ class ImageControllerTest {
         assert body != null;
         assertTrue( body instanceof String );
         String bodyString = (String) body;
-        assertEquals( "Created image folder.", bodyString );
+        assertEquals( "Created image folder.",
+                      bodyString );
     }
 
     @Test
@@ -80,14 +78,14 @@ class ImageControllerTest {
 
         ResponseEntity response = imageController.basicSetup();
 
-        verify( fileService).createFolder("src/test/resources/images/set"  );
-        verify( fileService).createFolder("src/test/resources/images/color"  );
-        verify( fileService).createFolder("src/test/resources/images/type"  );
-        verify( fileService).createFolder("src/test/resources/images/rarity"  );
-        verify( fileService).createFolder("src/test/resources/images/all"  );
+        verify( fileService ).createFolder( "src/test/resources/images/set" );
+        verify( fileService ).createFolder( "src/test/resources/images/color" );
+        verify( fileService ).createFolder( "src/test/resources/images/type" );
+        verify( fileService ).createFolder( "src/test/resources/images/rarity" );
+        verify( fileService ).createFolder( "src/test/resources/images/all" );
 
-        verify( imageService, never() ).saveAllImages();
-
+        verify( imageService,
+                never() ).saveAllImages();
 
 
         assertNotNull( response );
@@ -98,6 +96,7 @@ class ImageControllerTest {
         assert body != null;
         assertTrue( body instanceof String );
         String bodyString = (String) body;
-        assertEquals( "Error creating folders.", bodyString );
+        assertEquals( "Error creating folders.",
+                      bodyString );
     }
 }

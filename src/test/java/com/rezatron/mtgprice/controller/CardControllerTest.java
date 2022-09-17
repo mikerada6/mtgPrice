@@ -48,6 +48,6 @@ class CardControllerTest {
         assertTrue( bodyList.contains( "Two" ) );
         assertTrue( bodyList.contains( "Three" ) );
 
-        verify( cardService).getSuperTypes();
+        verify( cardService ).getSuperTypes();
     }
 }

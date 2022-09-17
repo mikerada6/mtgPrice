@@ -92,10 +92,9 @@ class ImageService {
                     } catch (InterruptedException e) {
                         throw new RuntimeException( e );
                     }
-                }
-                else {
+                } else {
                     log.info( "Skipping {} because it already exists.",
-                             key );
+                              key );
                 }
             }
         }

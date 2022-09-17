@@ -19,16 +19,16 @@ class FileService {
     public
     boolean doesFileExist(String fileName)
     {
-        log.info("Checking to see if {} exits.",
-                 fileName);
-        File f = new File(fileName);
+        log.info( "Checking to see if {} exits.",
+                  fileName );
+        File f = new File( fileName );
         if (f.exists()) {
-            log.info("{} does exist.",
-                     fileName);
+            log.info( "{} does exist.",
+                      fileName );
             return true;
         } else {
-            log.info("{} does not exist.",
-                     fileName);
+            log.info( "{} does not exist.",
+                      fileName );
             return false;
         }
     }
@@ -36,24 +36,26 @@ class FileService {
     public
     String loadFile(String file) throws IOException
     {
-        log.info("Loading file {}.",
-                 file);
+        log.info( "Loading file {}.",
+                  file );
         try {
-            return Files.readString(Path.of(file));
+            return Files.readString( Path.of( file ) );
         } catch (IOException e) {
-            log.error("Could not load file {}.",
-                      file);
+            log.error( "Could not load file {}.",
+                       file );
             throw e;
         }
     }
 
-    private boolean doesFolderExist(String folderPath)
+    private
+    boolean doesFolderExist(String folderPath)
     {
         File directory = new File( folderPath );
         return directory.exists();
     }
 
-    public boolean createFolder(String folderPath)
+    public
+    boolean createFolder(String folderPath)
     {
         try {
             File directory = new File( folderPath );
@@ -64,28 +66,27 @@ class FileService {
                 return true;
             }
             return true;
-        }catch(Exception e)
-        {
-            log.error("Could not create the folder path {}.", folderPath);
+        } catch (Exception e) {
+            log.error( "Could not create the folder path {}.",
+                       folderPath );
             return false;
         }
     }
 
 
-
     public
     void saveFile(String fileName, String fileContents) throws IOException
     {
-        log.info("Trying to save file {}.",
-                 fileName);
+        log.info( "Trying to save file {}.",
+                  fileName );
         try {
-            FileWriter myWriter = new FileWriter(fileName);
-            myWriter.write(fileContents);
+            FileWriter myWriter = new FileWriter( fileName );
+            myWriter.write( fileContents );
             myWriter.close();
-            log.info("Successfully wrote to the file.");
+            log.info( "Successfully wrote to the file." );
         } catch (IOException e) {
-            log.error("An error occurred while trying to write the file: {}.",
-                      e);
+            log.error( "An error occurred while trying to write the file: {}.",
+                       e );
             throw e;
         }
     }

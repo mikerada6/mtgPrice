@@ -65,11 +65,11 @@ class InventoryService {
                            bi.getCardId() );
                 continue;
             }
-            for(int i=0;i<bi.getNormal();i++) {
-                toSave.add(Inventory.builder().card( c ).foil( false ).user(user).build());
+            for (int i = 0; i < bi.getNormal(); i++) {
+                toSave.add( Inventory.builder().card( c ).foil( false ).user( user ).build() );
             }
-            for(int i=0;i<bi.getFoil();i++) {
-                toSave.add(Inventory.builder().card( c ).foil( true ).user(user).build());
+            for (int i = 0; i < bi.getFoil(); i++) {
+                toSave.add( Inventory.builder().card( c ).foil( true ).user( user ).build() );
             }
         }
         List<Inventory> saved = inventoryRepository.saveAll( toSave );
@@ -80,7 +80,7 @@ class InventoryService {
 
     public
     List<BulkInventory> getAll(String userId) {
-        List<Inventory> allCardsInIventory = inventoryRepository.findByUser_Id(userId);
+        List<Inventory> allCardsInIventory = inventoryRepository.findByUser_Id( userId );
         Map<String, Long> normal = allCardsInIventory.stream().filter( i -> !i.isFoil() )
                                                      .collect( Collectors.groupingBy( Inventory::getCardId,
                                                                                       Collectors.counting() ) );

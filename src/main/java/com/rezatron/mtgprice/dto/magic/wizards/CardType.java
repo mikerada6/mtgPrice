@@ -46,12 +46,15 @@ enum CardType {
         label = label.toLowerCase();
         if (label.contains( "card" ) || label.contains( "eaturecray" ) || label.contains( "hero" )
             || label.contains( "scheme" ) || label.contains( "phenomenon" ) || label.contains( "plane" )
-            || label.contains( "scariest creature you’ll ever see" ) || label.contains( "scheme" ) || label.contains( "summon" ) || label.contains( "vanguard" ))
+            || label.contains( "scariest creature you’ll ever see" ) || label.contains( "scheme" )
+            || label.contains( "summon" ) || label.contains( "vanguard" ))
         {
             cardTypes.add( CardType.OTHER );
             return cardTypes;
         }
-        if (label.contains( "token" ) || label.contains( "dungeon" ) || label.contains( "emblem" ) || label.contains( "sticker" )) {
+        if (label.contains( "token" ) || label.contains( "dungeon" ) || label.contains( "emblem" )
+            || label.contains( "sticker" ))
+        {
             cardTypes.add( CardType.TOKEN );
             return cardTypes;
         }

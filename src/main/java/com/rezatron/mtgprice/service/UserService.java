@@ -19,9 +19,9 @@ class UserService {
     @Transactional( readOnly = true )
     public
     User findById(String id) {
-        log.info("findById {}.",
-                 id);
-        return userRepository.findById(id).orElse(null);
+        log.info( "findById {}.",
+                  id );
+        return userRepository.findById( id ).orElse( null );
     }
 
     public

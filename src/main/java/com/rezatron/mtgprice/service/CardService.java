@@ -39,9 +39,9 @@ class CardService {
     @Transactional( readOnly = true )
     public
     Card findById(String id) {
-        log.info("findById {}.",
-                 id);
-        return cardRepository.findById(id).orElse(null);
+        log.info( "findById {}.",
+                  id );
+        return cardRepository.findById( id ).orElse( null );
     }
 
     @Transactional
@@ -56,7 +56,7 @@ class CardService {
         card.setMtgSetName( scryfallCard.getSetName() );
         card.setCollectorNumber( scryfallCard.getCollectorNumber() );
         card.setCmc( scryfallCard.getCmc() );
-            card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
+        card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
         card.setTypeLine( scryfallCard.getTypeLine() );
         card.setRarity( Rarity.fromShortName( scryfallCard.getRarity() ) );
         card.setLanguage( scryfallCard.getLangauage() );
@@ -157,12 +157,12 @@ class CardService {
                 String[] superType = splitTypeLine.split( " — " );
                 superTypes.add( superType[0].trim() );
             }
-       }
+        }
         return superTypes.stream().sorted().collect( Collectors.toList() );
     }
 
     public
     Card save(Card tempCard) {
-        return cardRepository.save(tempCard);
+        return cardRepository.save( tempCard );
     }
 }

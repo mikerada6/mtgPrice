@@ -73,13 +73,15 @@ class Inventory {
     {
         return foil;
     }
+
     @JsonSetter
     public
     void setFoil(boolean foil) {
         this.foil = foil;
     }
 
-    public String getCardId()
+    public
+    String getCardId()
     {
         return card.getId();
     }

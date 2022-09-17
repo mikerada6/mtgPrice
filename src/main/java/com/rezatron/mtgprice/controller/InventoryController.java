@@ -2,7 +2,6 @@ package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
 import com.rezatron.mtgprice.inventory.BulkInventory;
-import com.rezatron.mtgprice.inventory.Inventory;
 import com.rezatron.mtgprice.service.InventoryService;
 import com.rezatron.mtgprice.service.UserService;
 import com.rezatron.mtgprice.user.User;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,12 +36,15 @@ class InventoryController {
 
     @GetMapping( "/user/{userId}" )
     public
-    ResponseEntity getAll(@PathVariable("userId") String userId)
+    ResponseEntity getAll(
+            @PathVariable( "userId" )
+            String userId)
     {
         log.info( "testing" );
-        List<BulkInventory> _inventory = inventoryService.getAll(userId);
+        List<BulkInventory> _inventory = inventoryService.getAll( userId );
         return ResponseEntity.status( HttpStatus.OK ).body( _inventory );
     }
+
     @Operation( summary = "This method will add a card to useres inventory .",
                 description = "This method will create a new user with the provided information.  No password is "
                               + "created." )
@@ -55,17 +56,20 @@ class InventoryController {
                           content = @Content( schema = @Schema( implementation = InventoryDto.class ) ) )
             @Valid
             @org.springframework.web.bind.annotation.RequestBody
-            InventoryDto inventoryDto, @PathVariable("userId") String userId)
+            InventoryDto inventoryDto,
+            @PathVariable( "userId" )
+            String userId)
     {
         log.info( "addCard" );
         User user = userService.findById( userId );
-        if(user== null)
-        {
-            log.warn("No user found with id {}", userId);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user with userid " + userId+".");
+        if (user == null) {
+            log.warn( "No user found with id {}",
+                      userId );
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "No user with userid " + userId + "." );
         }
         inventoryDto.setUserId( user.getId() );
-        InventoryDto _inventoryDto = inventoryService.addCard( inventoryDto, user );
+        InventoryDto _inventoryDto = inventoryService.addCard( inventoryDto,
+                                                               user );
         return ResponseEntity.status( HttpStatus.CREATED ).body( _inventoryDto );
     }
 
@@ -78,13 +82,15 @@ class InventoryController {
                           content = @Content( schema = @Schema( implementation = BulkInventory.class ) ) )
             @Valid
             @org.springframework.web.bind.annotation.RequestBody
-            List<BulkInventory> cards, @PathVariable("userId") String userId)
+            List<BulkInventory> cards,
+            @PathVariable( "userId" )
+            String userId)
     {
         User user = userService.findById( userId );
-        if(user== null)
-        {
-            log.warn("No user found with id {}", userId);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user with userid " + userId+".");
+        if (user == null) {
+            log.warn( "No user found with id {}",
+                      userId );
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "No user with userid " + userId + "." );
         }
         log.info( "bulkAdd" );
         List<InventoryDto> saved = inventoryService.addCards( cards,

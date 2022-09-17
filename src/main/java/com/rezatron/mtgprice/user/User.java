@@ -34,7 +34,7 @@ import java.util.UUID;
 @EqualsAndHashCode( exclude = {"inventories", "decks"} )
 @Entity
 @Slf4j
-@JsonPropertyOrder({ "userName", "firstName", "lastName" })
+@JsonPropertyOrder( {"userName", "firstName", "lastName"} )
 public
 class User {
     @Id

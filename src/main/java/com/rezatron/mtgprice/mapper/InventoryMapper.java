@@ -19,7 +19,7 @@ import org.mapstruct.ReportingPolicy;
 public
 interface InventoryMapper {
     @Mapping( source = "cardId",
-              target = "card")
+              target = "card" )
     @Mapping( source = "userId",
               target = "user" )
     Inventory inventoryDtoToInventory(InventoryDto inventoryDto);

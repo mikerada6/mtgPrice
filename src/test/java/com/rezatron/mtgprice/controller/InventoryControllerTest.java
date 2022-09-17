@@ -74,15 +74,17 @@ class InventoryControllerTest {
         String userId = UUID.randomUUID().toString();
         String cardId = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
-        User user = User.builder().id(userId).build();
+        User user = User.builder().id( userId ).build();
         InventoryDto dto = InventoryDto.builder().cardId( cardId ).userId( userId ).foil( false ).build();
-        InventoryDto _dto =
-                InventoryDto.builder().id(id).createDateTime( now ).updateDateTime( now ).cardId( cardId ).userId( userId ).foil( false ).build();
+        InventoryDto _dto = InventoryDto.builder().id( id ).createDateTime( now ).updateDateTime( now ).cardId( cardId )
+                                        .userId( userId ).foil( false ).build();
 
-        when(inventoryService.addCard( dto,user )).thenReturn( _dto );
-        when(userService.findById( userId )).thenReturn( user );
+        when( inventoryService.addCard( dto,
+                                        user ) ).thenReturn( _dto );
+        when( userService.findById( userId ) ).thenReturn( user );
 
-        ResponseEntity response = inventoryController.addCard( dto, userId );
+        ResponseEntity response = inventoryController.addCard( dto,
+                                                               userId );
 
 
         assertNotNull( response );
@@ -96,9 +98,11 @@ class InventoryControllerTest {
                       bodyList );
 
 
-        verify( inventoryService ).addCard( dto,user );
-        verify(userService).findById( userId );
+        verify( inventoryService ).addCard( dto,
+                                            user );
+        verify( userService ).findById( userId );
     }
+
     @Test
     public
     void addCardNoUser()
@@ -107,14 +111,15 @@ class InventoryControllerTest {
         String userId = UUID.randomUUID().toString();
         String cardId = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
-        User user = User.builder().id(userId).build();
+        User user = User.builder().id( userId ).build();
         InventoryDto dto = InventoryDto.builder().cardId( cardId ).userId( userId ).foil( false ).build();
-        InventoryDto _dto =
-                InventoryDto.builder().id(id).createDateTime( now ).updateDateTime( now ).cardId( cardId ).userId( userId ).foil( false ).build();
+        InventoryDto _dto = InventoryDto.builder().id( id ).createDateTime( now ).updateDateTime( now ).cardId( cardId )
+                                        .userId( userId ).foil( false ).build();
 
-        when(userService.findById( userId )).thenReturn( null );
+        when( userService.findById( userId ) ).thenReturn( null );
 
-        ResponseEntity response = inventoryController.addCard( dto, userId );
+        ResponseEntity response = inventoryController.addCard( dto,
+                                                               userId );
 
 
         assertNotNull( response );
@@ -124,12 +129,14 @@ class InventoryControllerTest {
         assert body != null;
         assertTrue( body instanceof String );
         String bodyList = (String) body;
-        assertEquals( "No user with userid " + userId+".",
+        assertEquals( "No user with userid " + userId + ".",
                       bodyList );
 
 
-        verify( inventoryService, never() ).addCard( dto, user );
-        verify(userService).findById( userId );
+        verify( inventoryService,
+                never() ).addCard( dto,
+                                   user );
+        verify( userService ).findById( userId );
     }
 
     @Test
@@ -150,21 +157,23 @@ class InventoryControllerTest {
         String cardIdA = UUID.randomUUID().toString();
         String cardIdB = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
-        User user = User.builder().id(userId).build();
+        User user = User.builder().id( userId ).build();
         InventoryDto dtoA = InventoryDto.builder().cardId( cardIdA ).userId( userId ).foil( false ).build();
         InventoryDto dtoB = InventoryDto.builder().cardId( cardIdB ).userId( userId ).foil( true ).build();
-        InventoryDto _dtoA =
-                InventoryDto.builder().id(idA).createDateTime( now ).updateDateTime( now ).cardId( cardIdA ).userId( userId ).foil( false ).build();
-        InventoryDto _dtoB =
-                InventoryDto.builder().id(idB).createDateTime( now ).updateDateTime( now ).cardId( cardIdB ).userId( userId ).foil( true ).build();
+        InventoryDto _dtoA = InventoryDto.builder().id( idA ).createDateTime( now ).updateDateTime( now )
+                                         .cardId( cardIdA ).userId( userId ).foil( false ).build();
+        InventoryDto _dtoB = InventoryDto.builder().id( idB ).createDateTime( now ).updateDateTime( now )
+                                         .cardId( cardIdB ).userId( userId ).foil( true ).build();
         List<InventoryDto> cards = Arrays.asList( _dtoA,
                                                   _dtoB );
 
 
-        when(inventoryService.addCards( bulkInventoryCards,user )).thenReturn( cards );
-        when(userService.findById( userId )).thenReturn( user );
+        when( inventoryService.addCards( bulkInventoryCards,
+                                         user ) ).thenReturn( cards );
+        when( userService.findById( userId ) ).thenReturn( user );
 
-        ResponseEntity response = inventoryController.addBulkInventory( bulkInventoryCards, userId );
+        ResponseEntity response = inventoryController.addBulkInventory( bulkInventoryCards,
+                                                                        userId );
 
 
         assertNotNull( response );
@@ -174,13 +183,14 @@ class InventoryControllerTest {
         assert body != null;
         assertTrue( body instanceof List );
         List<BulkInventory> bodyList = (List<BulkInventory>) body;
-      assertEquals( 2,
+        assertEquals( 2,
                       bodyList.size() );
         assertTrue( bodyList.contains( _dtoA ) );
         assertTrue( bodyList.contains( _dtoB ) );
 
-        verify(userService).findById( userId );
-        verify(inventoryService).addCards( bulkInventoryCards,user );
+        verify( userService ).findById( userId );
+        verify( inventoryService ).addCards( bulkInventoryCards,
+                                             user );
     }
 
     @Test
@@ -200,20 +210,21 @@ class InventoryControllerTest {
         String cardIdA = UUID.randomUUID().toString();
         String cardIdB = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
-        User user = User.builder().id(userId).build();
+        User user = User.builder().id( userId ).build();
         InventoryDto dtoA = InventoryDto.builder().cardId( cardIdA ).userId( userId ).foil( false ).build();
         InventoryDto dtoB = InventoryDto.builder().cardId( cardIdB ).userId( userId ).foil( true ).build();
-        InventoryDto _dtoA =
-                InventoryDto.builder().id(idA).createDateTime( now ).updateDateTime( now ).cardId( cardIdA ).userId( userId ).foil( false ).build();
-        InventoryDto _dtoB =
-                InventoryDto.builder().id(idB).createDateTime( now ).updateDateTime( now ).cardId( cardIdB ).userId( userId ).foil( true ).build();
+        InventoryDto _dtoA = InventoryDto.builder().id( idA ).createDateTime( now ).updateDateTime( now )
+                                         .cardId( cardIdA ).userId( userId ).foil( false ).build();
+        InventoryDto _dtoB = InventoryDto.builder().id( idB ).createDateTime( now ).updateDateTime( now )
+                                         .cardId( cardIdB ).userId( userId ).foil( true ).build();
         List<InventoryDto> cards = Arrays.asList( _dtoA,
                                                   _dtoB );
 
 
-        when(userService.findById( userId )).thenReturn( null );
+        when( userService.findById( userId ) ).thenReturn( null );
 
-        ResponseEntity response = inventoryController.addBulkInventory( bulkInventoryCards, userId );
+        ResponseEntity response = inventoryController.addBulkInventory( bulkInventoryCards,
+                                                                        userId );
 
 
         assertNotNull( response );
@@ -223,11 +234,13 @@ class InventoryControllerTest {
         assert body != null;
         assertTrue( body instanceof String );
         String bodyList = (String) body;
-        assertEquals( "No user with userid " + userId+".",
+        assertEquals( "No user with userid " + userId + ".",
                       bodyList );
 
 
-        verify(inventoryService, never()).addCards( bulkInventoryCards,user );
-        verify(userService).findById( userId );
+        verify( inventoryService,
+                never() ).addCards( bulkInventoryCards,
+                                    user );
+        verify( userService ).findById( userId );
     }
 }
