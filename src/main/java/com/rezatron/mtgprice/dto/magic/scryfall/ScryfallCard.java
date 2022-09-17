@@ -83,7 +83,8 @@ class ScryfallCard implements Serializable {
     private ImageUris imageUris;
     @SerializedName( "keywords" )
     private List<Object> keywords;
-    @SerializedName( "lang" )
+    @SerializedName( value = "langauage",
+                     alternate = {"lang"} )
     private String langauage;
     @SerializedName( "layout" )
     private String layout;

@@ -1,11 +1,10 @@
 package com.rezatron.mtgprice.controller;
 
+import com.google.gson.JsonSyntaxException;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.service.CardService;
 import com.rezatron.mtgprice.service.FileService;
 import com.rezatron.mtgprice.service.ScryfallService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping( "/api/v1/scryfall" )
-@AllArgsConstructor
-@NoArgsConstructor
 @Slf4j
 public
 class ScryfallController {
@@ -57,15 +54,22 @@ class ScryfallController {
         } catch (IOException e) {
             log.error( "Unable to read file {}.",
                        fileLocation );
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( "Unable to read" );
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( "Unable to read." );
         }
-        List<ScryfallCard> cards = scryfallService.convertDTO( file );
-        scryfallService.sendMessages( cards,
-                                      fileLocation );
-        stopWatch.stop();
-        log.info( "Bulk update is now completed {} records added to the queue in {}.",
-                  cards.size(),
-                  stopWatch.toString() );
-        return ResponseEntity.status( HttpStatus.ACCEPTED ).body( cards.size() );
+        try {
+            List<ScryfallCard> cards = scryfallService.convertDTO( file );
+
+            scryfallService.sendMessages( cards,
+                                          fileLocation );
+
+            stopWatch.stop();
+            log.info( "Bulk update is now completed {} records added to the queue in {}.",
+                      cards.size(),
+                      stopWatch );
+            return ResponseEntity.status( HttpStatus.ACCEPTED ).body( cards.size() );
+        } catch (JsonSyntaxException e) {
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( "Ran into a problem trying to convert the ScryFall cards." );
+        }
     }
 }
