@@ -36,10 +36,18 @@ class InventoryController {
     @Autowired
     UserService userService;
 
+    @GetMapping( "/user/{userId}" )
+    public
+    ResponseEntity getAll(@PathVariable("userId") String userId)
+    {
+        log.info( "testing" );
+        ArrayList<BulkInventory> _inventory = inventoryService.getAll();
+        return ResponseEntity.status( HttpStatus.OK ).body( _inventory );
+    }
     @Operation( summary = "This method will add a card to useres inventory .",
                 description = "This method will create a new user with the provided information.  No password is "
                               + "created." )
-    @PostMapping( "/addCard" )
+    @PostMapping( "/user/{userId}" )
     public
     ResponseEntity<InventoryDto> addCard(
             @RequestBody( description = "Details for the user you wish to create.",
@@ -47,38 +55,17 @@ class InventoryController {
                           content = @Content( schema = @Schema( implementation = InventoryDto.class ) ) )
             @Valid
             @org.springframework.web.bind.annotation.RequestBody
-            InventoryDto inventoryDto)
+            InventoryDto inventoryDto, @PathVariable("userId") String userId)
     {
         log.info( "addCard" );
         InventoryDto _inventoryDto = inventoryService.addCard( inventoryDto );
         return ResponseEntity.status( HttpStatus.CREATED ).body( _inventoryDto );
     }
 
-    @GetMapping( "/testing" )
-    public
-    ResponseEntity<InventoryDto> testing(
-            @RequestBody( description = "Details for the user you wish to create.",
-                          required = false )
 
-            String setName)
-    {
-        log.info( "testing" );
-        InventoryDto _inventoryDto = inventoryService.testing( setName );
-        return ResponseEntity.status( HttpStatus.CREATED ).body( _inventoryDto );
-    }
-
-    @GetMapping( "/" )
+    @PostMapping( "/user/{userId}/bulkAdd" )
     public
-    ResponseEntity getAll()
-    {
-        log.info( "testing" );
-        ArrayList<BulkInventory> _inventory = inventoryService.getAll();
-        return ResponseEntity.status( HttpStatus.CREATED ).body( _inventory );
-    }
-
-    @PostMapping( "/bulkAdd/user/{userId}" )
-    public
-    ResponseEntity createBulkStudents(
+    ResponseEntity addBulkInventory(
             @RequestBody( description = "Cards to add.",
                           required = true,
                           content = @Content( schema = @Schema( implementation = BulkInventory.class ) ) )

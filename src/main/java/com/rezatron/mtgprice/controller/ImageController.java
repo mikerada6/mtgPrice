@@ -1,16 +1,16 @@
 package com.rezatron.mtgprice.controller;
 
+import com.rezatron.mtgprice.service.FileService;
 import com.rezatron.mtgprice.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,11 +21,13 @@ public
 class ImageController {
     @Autowired
     ImageService imageService;
+    @Autowired
+    FileService fileService;
 
     @Value( "${mtg.download.baselocation}" )
     private String baseFileLocation;
 
-    @GetMapping( "/" )
+    @PostMapping( "/" )
     public
     ResponseEntity basicSetup()
     {
@@ -35,20 +37,13 @@ class ImageController {
                                                                     "rarity",
                                                                     "all" ) );
         for (String folder : folders) {
-            String path = "/Volumes/Magic/images/" + folder;
-            path = baseFileLocation + "/images/" + folder;
+            String path = baseFileLocation + "/images/" + folder;
 
-            File directory = new File( path );
-            if (!directory.exists()) {
-                directory.mkdirs();
-                log.info( "Creating folder {}.",
-                          path );
-                // If you require it to make the entire directory path including parents,
-                // use directory.mkdirs(); here instead.
+            if (!fileService.createFolder( path )) {
+                return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( "Error creating folders." );
             }
         }
-//        imageService.getImages();
         imageService.saveAllImages();
-        return ResponseEntity.status( HttpStatus.NO_CONTENT ).body( "Created image folder" );
+        return ResponseEntity.status( HttpStatus.NO_CONTENT ).body( "Created image folder." );
     }
 }

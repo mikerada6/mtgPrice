@@ -23,11 +23,4 @@ class DeckController {
     @Autowired
     DeckService deckService;
 
-    @PostMapping( "/" )
-    public
-    ResponseEntity getSuperTypes(String deckList)
-    {
-        Deck deck = deckService.createDeck( deckList);
-        return ResponseEntity.status( HttpStatus.CREATED ).body( deck );
-    }
 }

@@ -47,6 +47,31 @@ class FileService {
         }
     }
 
+    private boolean doesFolderExist(String folderPath)
+    {
+        File directory = new File( folderPath );
+        return directory.exists();
+    }
+
+    public boolean createFolder(String folderPath)
+    {
+        try {
+            File directory = new File( folderPath );
+            if (!directory.exists()) {
+                directory.mkdirs();
+                log.info( "Creating folder {}.",
+                          folderPath );
+                return true;
+            }
+            return true;
+        }catch(Exception e)
+        {
+            log.error("Could not create the folder path {}.", folderPath);
+            return false;
+        }
+    }
+
+
 
     public
     void saveFile(String fileName, String fileContents) throws IOException

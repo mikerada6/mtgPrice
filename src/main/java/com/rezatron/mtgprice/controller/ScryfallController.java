@@ -66,6 +66,6 @@ class ScryfallController {
         stopWatch.stop();
         log.info("Bulk update is now completed {} records added to the queue in {}.", cards.size(),
                  stopWatch.toString());
-        return ResponseEntity.status( HttpStatus.CREATED).body( cards.size() );
+        return ResponseEntity.status( HttpStatus.ACCEPTED).body( cards.size() );
     }
 }
