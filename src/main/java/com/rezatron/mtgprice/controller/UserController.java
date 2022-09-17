@@ -29,7 +29,7 @@ class UserController {
     @Operation( summary = "This method will create a new user.",
                 description = "This method will create a new user with the provided information.  No password is "
                               + "created." )
-    @PostMapping( "/createUser" )
+    @PostMapping( "/" )
     public
     ResponseEntity<User> createUser(
             @RequestBody( description = "Details for the user you wish to create.",
@@ -41,6 +41,7 @@ class UserController {
     {
         log.info( "createUser" );
         User u = userService.saveUser( user );
+
         return ResponseEntity.status( HttpStatus.CREATED ).body( u );
     }
 }
