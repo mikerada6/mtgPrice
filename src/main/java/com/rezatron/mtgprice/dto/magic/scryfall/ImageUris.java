@@ -1,7 +1,4 @@
-
 package com.rezatron.mtgprice.dto.magic.scryfall;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
@@ -21,19 +18,22 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode()
-public class ImageUris implements Serializable {
+public
+class ImageUris implements Serializable {
 
-    @SerializedName(value="art_crop", alternate={"artCrop"})
+    @SerializedName( value = "art_crop",
+                     alternate = {"artCrop"} )
     private String artCrop;
-    @SerializedName(value="border_crop", alternate={"borderCrop"})
+    @SerializedName( value = "border_crop",
+                     alternate = {"borderCrop"} )
     private String borderCrop;
-    @SerializedName("large")
+    @SerializedName( "large" )
     private String large;
-    @SerializedName("normal")
+    @SerializedName( "normal" )
     private String normal;
-    @SerializedName("png")
+    @SerializedName( "png" )
     private String png;
-    @SerializedName("small")
+    @SerializedName( "small" )
     private String small;
 
 

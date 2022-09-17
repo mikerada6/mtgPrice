@@ -6,14 +6,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SenderConfig {
+public
+class SenderConfig {
 
-    @Value("${queue.name}")
+    @Value( "${queue.name}" )
     private String message;
 
     @Bean
-    public Queue queue() {
-        return new Queue(message, true);
+    public
+    Queue queue() {
+        return new Queue( message,
+                          true );
     }
 
 }

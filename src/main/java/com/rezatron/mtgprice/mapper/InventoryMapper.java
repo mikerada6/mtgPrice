@@ -1,7 +1,7 @@
 package com.rezatron.mtgprice.mapper;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
-import com.rezatron.mtgprice.inventory.Inventory;
+import com.rezatron.mtgprice.entity.Inventory;
 import com.rezatron.mtgprice.service.CardService;
 import com.rezatron.mtgprice.service.UserService;
 import org.mapstruct.BeanMapping;
@@ -19,7 +19,7 @@ import org.mapstruct.ReportingPolicy;
 public
 interface InventoryMapper {
     @Mapping( source = "cardId",
-              target = "card")
+              target = "card" )
     @Mapping( source = "userId",
               target = "user" )
     Inventory inventoryDtoToInventory(InventoryDto inventoryDto);

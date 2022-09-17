@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity.wizards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

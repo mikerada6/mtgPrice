@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rezatron.mtgprice.dto.magic.Card;
+import com.google.gson.JsonSyntaxException;
 import com.rezatron.mtgprice.dto.magic.scryfall.BulkData;
 import com.rezatron.mtgprice.dto.magic.scryfall.BulkDataInformation;
 import com.rezatron.mtgprice.dto.magic.scryfall.Datum;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
+import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.exception.ScryFallException;
 import com.rezatron.mtgprice.queue.QueueSender;
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +156,7 @@ class ScryfallService {
 
 
     public
-    List<ScryfallCard> convertDTO(String file) {
+    List<ScryfallCard> convertDTO(String file) throws JsonSyntaxException {
         Gson gson = new Gson();
         try {
             log.info( "Converting data to ScryfallCard." );
@@ -163,11 +164,12 @@ class ScryfallService {
                                                                          ScryfallCard[].class ) );
             log.info( "Converting data to ScryfallCard completed." );
             return cardArray;
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
             log.error( "Unable to convert cardArray {}.",
                        e );
+            throw e;
         }
-        return null;
+
     }
 
     @Transactional

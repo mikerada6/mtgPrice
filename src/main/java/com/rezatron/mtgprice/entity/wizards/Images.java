@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity.wizards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -21,13 +21,13 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "CardFaceImages" )
-@ToString( exclude = {"cardFace"} )
-@EqualsAndHashCode( exclude = {"cardFace"} )
+@Table( name = "Images" )
+@ToString( exclude = {"card"} )
+@EqualsAndHashCode( exclude = {"card"} )
 @Entity
 @JsonPropertyOrder( alphabetic = true )
 public
-class CardFaceImages {
+class Images {
     @Id
     @JsonIgnore
     private String id;
@@ -39,16 +39,16 @@ class CardFaceImages {
     private String small;
 
     @OneToOne( mappedBy = "images" )
-    private CardFace cardFace;
+    private Card card;
 
     public
-    CardFace getCard() {
-        return cardFace;
+    Card getCard() {
+        return card;
     }
 
     public
-    void setCard(CardFace card) {
-        this.cardFace = card;
+    void setCard(Card card) {
+        this.card = card;
     }
 
 

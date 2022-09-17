@@ -1,10 +1,9 @@
-package com.rezatron.mtgprice.inventory;
+package com.rezatron.mtgprice.entity;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.rezatron.mtgprice.dto.magic.Card;
-import com.rezatron.mtgprice.user.User;
+import com.rezatron.mtgprice.entity.wizards.Card;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -73,13 +72,15 @@ class Inventory {
     {
         return foil;
     }
+
     @JsonSetter
     public
     void setFoil(boolean foil) {
         this.foil = foil;
     }
 
-    public String getCardId()
+    public
+    String getCardId()
     {
         return card.getId();
     }

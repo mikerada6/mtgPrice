@@ -1,6 +1,5 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity;
 
-import com.rezatron.mtgprice.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

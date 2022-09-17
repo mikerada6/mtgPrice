@@ -4,6 +4,6 @@ public
 class ScryFallException extends RuntimeException {
     public
     ScryFallException(String message) {
-        super(message);
+        super( message );
     }
 }

@@ -1,7 +1,4 @@
-
 package com.rezatron.mtgprice.dto.magic.scryfall;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
@@ -12,8 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 @JsonIgnoreProperties( ignoreUnknown = true )
 @Data
 @Builder
@@ -21,45 +16,46 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode()
-public class Legalities{
+public
+class Legalities {
 
-    @SerializedName("alchemy")
+    @SerializedName( "alchemy" )
     private String alchemy;
-    @SerializedName("brawl")
+    @SerializedName( "brawl" )
     private String brawl;
-    @SerializedName("commander")
+    @SerializedName( "commander" )
     private String commander;
-    @SerializedName("duel")
+    @SerializedName( "duel" )
     private String duel;
-    @SerializedName("explorer")
+    @SerializedName( "explorer" )
     private String explorer;
-    @SerializedName("future")
+    @SerializedName( "future" )
     private String future;
-    @SerializedName("gladiator")
+    @SerializedName( "gladiator" )
     private String gladiator;
-    @SerializedName("historic")
+    @SerializedName( "historic" )
     private String historic;
-    @SerializedName("historicbrawl")
+    @SerializedName( "historicbrawl" )
     private String historicbrawl;
-    @SerializedName("legacy")
+    @SerializedName( "legacy" )
     private String legacy;
-    @SerializedName("modern")
+    @SerializedName( "modern" )
     private String modern;
-    @SerializedName("oldschool")
+    @SerializedName( "oldschool" )
     private String oldschool;
-    @SerializedName("pauper")
+    @SerializedName( "pauper" )
     private String pauper;
-    @SerializedName("paupercommander")
+    @SerializedName( "paupercommander" )
     private String paupercommander;
-    @SerializedName("penny")
+    @SerializedName( "penny" )
     private String penny;
-    @SerializedName("pioneer")
+    @SerializedName( "pioneer" )
     private String pioneer;
-    @SerializedName("premodern")
+    @SerializedName( "premodern" )
     private String premodern;
-    @SerializedName("standard")
+    @SerializedName( "standard" )
     private String standard;
-    @SerializedName("vintage")
+    @SerializedName( "vintage" )
     private String vintage;
 
 }

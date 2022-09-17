@@ -18,10 +18,9 @@ import java.util.List;
 public
 class QueueConsumer {
 
+    public static Gson gson = new Gson();
     @Autowired
     ScryfallService scryfallService;
-
-    public static Gson gson = new Gson();
 
     @RabbitListener( queues = {"${queue.name}"} )
     public
@@ -29,21 +28,18 @@ class QueueConsumer {
             @Payload
             String fileBody)
     {
-        log.info("Received message.");
+        log.info( "Received message." );
         try {
             List<ScryfallCard> cardArray = Arrays.asList( gson.fromJson( fileBody,
                                                                          ScryfallCard[].class ) );
             scryfallService.saveCards( cardArray );
-        }catch(JsonSyntaxException e)
-        {
-            log.error("Could not convert the cards");
+        } catch (JsonSyntaxException e) {
+            log.error( "Could not convert the cards" );
             List<ScryfallCard> cardArray = Arrays.asList( gson.fromJson( fileBody,
                                                                          ScryfallCard[].class ) );
             scryfallService.saveCards( cardArray );
-        }
-        catch(Exception e)
-        {
-            log.error("what is the problem here?");
+        } catch (Exception e) {
+            log.error( "what is the problem here?" );
         }
 
 

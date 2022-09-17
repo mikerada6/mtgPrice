@@ -1,9 +1,7 @@
-package com.rezatron.mtgprice.user;
+package com.rezatron.mtgprice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.rezatron.mtgprice.dto.magic.Deck;
-import com.rezatron.mtgprice.inventory.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +32,7 @@ import java.util.UUID;
 @EqualsAndHashCode( exclude = {"inventories", "decks"} )
 @Entity
 @Slf4j
-@JsonPropertyOrder({ "userName", "firstName", "lastName" })
+@JsonPropertyOrder( {"userName", "firstName", "lastName"} )
 public
 class User {
     @Id

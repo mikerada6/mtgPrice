@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.UUID;
 

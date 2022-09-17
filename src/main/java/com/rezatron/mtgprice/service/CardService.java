@@ -1,15 +1,15 @@
 package com.rezatron.mtgprice.service;
 
-import com.rezatron.mtgprice.dto.magic.Card;
-import com.rezatron.mtgprice.dto.magic.CardFace;
-import com.rezatron.mtgprice.dto.magic.CardFaceImages;
-import com.rezatron.mtgprice.dto.magic.Images;
-import com.rezatron.mtgprice.dto.magic.Price;
 import com.rezatron.mtgprice.dto.magic.scryfall.ImageUris;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
+import com.rezatron.mtgprice.entity.Price;
+import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.CardFace;
+import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
+import com.rezatron.mtgprice.entity.wizards.Images;
 import com.rezatron.mtgprice.repository.CardFaceRepository;
 import com.rezatron.mtgprice.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +39,9 @@ class CardService {
     @Transactional( readOnly = true )
     public
     Card findById(String id) {
-        log.info("findById {}.",
-                 id);
-        return cardRepository.findById(id).orElse(null);
+        log.info( "findById {}.",
+                  id );
+        return cardRepository.findById( id ).orElse( null );
     }
 
     @Transactional
@@ -56,7 +56,7 @@ class CardService {
         card.setMtgSetName( scryfallCard.getSetName() );
         card.setCollectorNumber( scryfallCard.getCollectorNumber() );
         card.setCmc( scryfallCard.getCmc() );
-            card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
+        card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
         card.setTypeLine( scryfallCard.getTypeLine() );
         card.setRarity( Rarity.fromShortName( scryfallCard.getRarity() ) );
         card.setLanguage( scryfallCard.getLangauage() );
@@ -157,12 +157,12 @@ class CardService {
                 String[] superType = splitTypeLine.split( " — " );
                 superTypes.add( superType[0].trim() );
             }
-       }
+        }
         return superTypes.stream().sorted().collect( Collectors.toList() );
     }
 
     public
     Card save(Card tempCard) {
-        return cardRepository.save(tempCard);
+        return cardRepository.save( tempCard );
     }
 }

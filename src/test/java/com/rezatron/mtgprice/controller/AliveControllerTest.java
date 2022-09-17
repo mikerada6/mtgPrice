@@ -15,6 +15,7 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith( MockitoExtension.class )
@@ -58,7 +59,8 @@ class AliveControllerTest {
         assertEquals( time.toString(),
                       body.get( "time" ) );
         assertTrue( body.containsKey( "baseFileLocation" ) );
-//        assertEquals("testValue",
-//                      body.get( "baseFileLocation" ) );
+//
+        verify( buildProperties ).getVersion();
+        verify( buildProperties ).getTime();
     }
 }

@@ -1,13 +1,13 @@
 package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
-import com.rezatron.mtgprice.dto.magic.Card;
+import com.rezatron.mtgprice.entity.Inventory;
+import com.rezatron.mtgprice.entity.User;
+import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.inventory.BulkInventory;
-import com.rezatron.mtgprice.inventory.Inventory;
 import com.rezatron.mtgprice.mapper.InventoryMapper;
 import com.rezatron.mtgprice.repository.CardRepository;
 import com.rezatron.mtgprice.repository.InventoryRepository;
-import com.rezatron.mtgprice.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +30,9 @@ class InventoryService {
     CardRepository cardRepository;
 
     public
-    InventoryDto addCard(InventoryDto dto) {
+    InventoryDto addCard(InventoryDto dto, User user) {
         Inventory inventory = inventoryMapper.inventoryDtoToInventory( dto );
+        inventory.setUser( user );
         if (inventory.getCard() != null && inventory.getUser() != null) {
             inventory = inventoryRepository.saveAndFlush( inventory );
             return inventoryMapper.inventoryToInventoryDto( inventory );
@@ -53,7 +54,7 @@ class InventoryService {
     }
 
     public
-    List<Inventory> addCards(List<BulkInventory> cards, User user) {
+    List<InventoryDto> addCards(List<BulkInventory> cards, User user) {
         List<BulkInventory> allCards = cards.stream().filter( c -> c.getNormal() > 0 || c.getFoil() > 0 )
                                             .collect( Collectors.toList() );
         ArrayList<Inventory> toSave = new ArrayList<>();
@@ -64,20 +65,22 @@ class InventoryService {
                            bi.getCardId() );
                 continue;
             }
-            for(int i=0;i<bi.getNormal();i++) {
-                toSave.add(Inventory.builder().card( c ).foil( false ).user(user).build());
+            for (int i = 0; i < bi.getNormal(); i++) {
+                toSave.add( Inventory.builder().card( c ).foil( false ).user( user ).build() );
             }
-            for(int i=0;i<bi.getFoil();i++) {
-                toSave.add(Inventory.builder().card( c ).foil( true ).user(user).build());
+            for (int i = 0; i < bi.getFoil(); i++) {
+                toSave.add( Inventory.builder().card( c ).foil( true ).user( user ).build() );
             }
         }
         List<Inventory> saved = inventoryRepository.saveAll( toSave );
-        return saved;
+        List<InventoryDto> ans = saved.stream().map( inventory -> inventoryMapper.inventoryToInventoryDto( inventory ) )
+                                      .collect( Collectors.toList() );
+        return ans;
     }
 
     public
-    ArrayList<BulkInventory> getAll() {
-        List<Inventory> allCardsInIventory = inventoryRepository.findAll();
+    List<BulkInventory> getAll(String userId) {
+        List<Inventory> allCardsInIventory = inventoryRepository.findByUser_Id( userId );
         Map<String, Long> normal = allCardsInIventory.stream().filter( i -> !i.isFoil() )
                                                      .collect( Collectors.groupingBy( Inventory::getCardId,
                                                                                       Collectors.counting() ) );
