@@ -1,6 +1,6 @@
 package com.rezatron.mtgprice.repository;
 
-import com.rezatron.mtgprice.dto.magic.Card;
+import com.rezatron.mtgprice.entity.wizards.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

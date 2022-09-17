@@ -1,6 +1,6 @@
 package com.rezatron.mtgprice.repository;
 
-import com.rezatron.mtgprice.dto.magic.Price;
+import com.rezatron.mtgprice.entity.Price;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public

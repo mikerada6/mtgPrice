@@ -1,6 +1,6 @@
 package com.rezatron.mtgprice.repository;
 
-import com.rezatron.mtgprice.inventory.Inventory;
+import com.rezatron.mtgprice.entity.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

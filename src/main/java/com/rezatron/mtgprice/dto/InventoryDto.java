@@ -3,12 +3,14 @@ package com.rezatron.mtgprice.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@ToString
 public
 class InventoryDto implements Serializable {
     @JsonIgnore

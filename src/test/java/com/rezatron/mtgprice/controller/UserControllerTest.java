@@ -1,7 +1,7 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.service.UserService;
-import com.rezatron.mtgprice.user.User;
+import com.rezatron.mtgprice.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

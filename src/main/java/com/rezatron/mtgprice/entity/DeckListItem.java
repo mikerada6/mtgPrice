@@ -1,4 +1,4 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

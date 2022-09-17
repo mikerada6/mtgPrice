@@ -1,6 +1,6 @@
 package com.rezatron.mtgprice.repository;
 
-import com.rezatron.mtgprice.dto.magic.CardFace;
+import com.rezatron.mtgprice.entity.wizards.CardFace;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

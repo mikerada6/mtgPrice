@@ -1,10 +1,10 @@
 package com.rezatron.mtgprice.service;
 
-import com.rezatron.mtgprice.dto.magic.Card;
-import com.rezatron.mtgprice.dto.magic.CardFace;
-import com.rezatron.mtgprice.dto.magic.CardFaceImages;
-import com.rezatron.mtgprice.dto.magic.Images;
-import com.rezatron.mtgprice.dto.magic.Price;
+import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.CardFace;
+import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
+import com.rezatron.mtgprice.entity.wizards.Images;
+import com.rezatron.mtgprice.entity.Price;
 import com.rezatron.mtgprice.dto.magic.scryfall.ImageUris;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;

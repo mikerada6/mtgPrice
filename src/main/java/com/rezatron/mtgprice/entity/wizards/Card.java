@@ -1,10 +1,11 @@
-package com.rezatron.mtgprice.dto.magic;
+package com.rezatron.mtgprice.entity.wizards;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.rezatron.mtgprice.dto.magic.wizards.CardType;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
-import com.rezatron.mtgprice.inventory.Inventory;
+import com.rezatron.mtgprice.entity.Inventory;
+import com.rezatron.mtgprice.entity.Price;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

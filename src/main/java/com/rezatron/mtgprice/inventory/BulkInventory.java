@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString()
-@EqualsAndHashCode()
+@ToString
 @Slf4j
 public
 class BulkInventory {
