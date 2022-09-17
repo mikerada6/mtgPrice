@@ -30,8 +30,9 @@ class InventoryService {
     CardRepository cardRepository;
 
     public
-    InventoryDto addCard(InventoryDto dto) {
+    InventoryDto addCard(InventoryDto dto, User user) {
         Inventory inventory = inventoryMapper.inventoryDtoToInventory( dto );
+        inventory.setUser( user );
         if (inventory.getCard() != null && inventory.getUser() != null) {
             inventory = inventoryRepository.saveAndFlush( inventory );
             return inventoryMapper.inventoryToInventoryDto( inventory );
@@ -53,7 +54,7 @@ class InventoryService {
     }
 
     public
-    List<Inventory> addCards(List<BulkInventory> cards, User user) {
+    List<InventoryDto> addCards(List<BulkInventory> cards, User user) {
         List<BulkInventory> allCards = cards.stream().filter( c -> c.getNormal() > 0 || c.getFoil() > 0 )
                                             .collect( Collectors.toList() );
         ArrayList<Inventory> toSave = new ArrayList<>();
@@ -72,12 +73,14 @@ class InventoryService {
             }
         }
         List<Inventory> saved = inventoryRepository.saveAll( toSave );
-        return saved;
+        List<InventoryDto> ans = saved.stream().map( inventory -> inventoryMapper.inventoryToInventoryDto( inventory ) )
+                                      .collect( Collectors.toList() );
+        return ans;
     }
 
     public
-    ArrayList<BulkInventory> getAll() {
-        List<Inventory> allCardsInIventory = inventoryRepository.findAll();
+    List<BulkInventory> getAll(String userId) {
+        List<Inventory> allCardsInIventory = inventoryRepository.findByUser_Id(userId);
         Map<String, Long> normal = allCardsInIventory.stream().filter( i -> !i.isFoil() )
                                                      .collect( Collectors.groupingBy( Inventory::getCardId,
                                                                                       Collectors.counting() ) );

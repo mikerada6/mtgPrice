@@ -41,7 +41,7 @@ class InventoryController {
     ResponseEntity getAll(@PathVariable("userId") String userId)
     {
         log.info( "testing" );
-        ArrayList<BulkInventory> _inventory = inventoryService.getAll();
+        List<BulkInventory> _inventory = inventoryService.getAll(userId);
         return ResponseEntity.status( HttpStatus.OK ).body( _inventory );
     }
     @Operation( summary = "This method will add a card to useres inventory .",
@@ -49,7 +49,7 @@ class InventoryController {
                               + "created." )
     @PostMapping( "/user/{userId}" )
     public
-    ResponseEntity<InventoryDto> addCard(
+    ResponseEntity addCard(
             @RequestBody( description = "Details for the user you wish to create.",
                           required = true,
                           content = @Content( schema = @Schema( implementation = InventoryDto.class ) ) )
@@ -58,7 +58,14 @@ class InventoryController {
             InventoryDto inventoryDto, @PathVariable("userId") String userId)
     {
         log.info( "addCard" );
-        InventoryDto _inventoryDto = inventoryService.addCard( inventoryDto );
+        User user = userService.findById( userId );
+        if(user== null)
+        {
+            log.warn("No user found with id {}", userId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user with userid " + userId+".");
+        }
+        inventoryDto.setUserId( user.getId() );
+        InventoryDto _inventoryDto = inventoryService.addCard( inventoryDto, user );
         return ResponseEntity.status( HttpStatus.CREATED ).body( _inventoryDto );
     }
 
@@ -80,8 +87,8 @@ class InventoryController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user with userid " + userId+".");
         }
         log.info( "bulkAdd" );
-        List<Inventory> saved = inventoryService.addCards( cards,
-                                                           user );
+        List<InventoryDto> saved = inventoryService.addCards( cards,
+                                                              user );
         return ResponseEntity.status( HttpStatus.CREATED ).body( saved );
     }
 }
