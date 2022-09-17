@@ -159,8 +159,9 @@ class ScryfallControllerTest {
         verify( fileService ).loadFile( fileLocation );
         verify( scryfallService ).convertDTO( twoCard );
 
-        verify( scryfallService,never() ).sendMessages( scryfallCards,
-                                                fileLocation );
+        verify( scryfallService,
+                never() ).sendMessages( scryfallCards,
+                                        fileLocation );
     }
 
     private

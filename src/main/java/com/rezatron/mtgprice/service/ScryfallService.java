@@ -164,9 +164,7 @@ class ScryfallService {
                                                                          ScryfallCard[].class ) );
             log.info( "Converting data to ScryfallCard completed." );
             return cardArray;
-        }
-        catch(JsonSyntaxException e)
-        {
+        } catch (JsonSyntaxException e) {
             log.error( "Unable to convert cardArray {}.",
                        e );
             throw e;
