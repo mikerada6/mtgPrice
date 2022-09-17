@@ -1,10 +1,10 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
+import com.rezatron.mtgprice.entity.User;
 import com.rezatron.mtgprice.inventory.BulkInventory;
 import com.rezatron.mtgprice.service.InventoryService;
 import com.rezatron.mtgprice.service.UserService;
-import com.rezatron.mtgprice.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

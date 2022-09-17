@@ -1,8 +1,8 @@
 package com.rezatron.mtgprice.service;
 
-import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.entity.Deck;
 import com.rezatron.mtgprice.entity.DeckListItem;
+import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.repository.CardRepository;
 import com.rezatron.mtgprice.repository.DeckRepository;
 import lombok.extern.slf4j.Slf4j;

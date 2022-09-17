@@ -1,10 +1,10 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
+import com.rezatron.mtgprice.entity.User;
 import com.rezatron.mtgprice.inventory.BulkInventory;
 import com.rezatron.mtgprice.service.InventoryService;
 import com.rezatron.mtgprice.service.UserService;
-import com.rezatron.mtgprice.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,15 +1,15 @@
 package com.rezatron.mtgprice.service;
 
-import com.rezatron.mtgprice.entity.wizards.Card;
-import com.rezatron.mtgprice.entity.wizards.CardFace;
-import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
-import com.rezatron.mtgprice.entity.wizards.Images;
-import com.rezatron.mtgprice.entity.Price;
 import com.rezatron.mtgprice.dto.magic.scryfall.ImageUris;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
+import com.rezatron.mtgprice.entity.Price;
+import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.CardFace;
+import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
+import com.rezatron.mtgprice.entity.wizards.Images;
 import com.rezatron.mtgprice.repository.CardFaceRepository;
 import com.rezatron.mtgprice.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;

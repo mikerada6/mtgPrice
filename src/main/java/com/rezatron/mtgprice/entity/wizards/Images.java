@@ -2,7 +2,6 @@ package com.rezatron.mtgprice.entity.wizards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.rezatron.mtgprice.entity.wizards.Card;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

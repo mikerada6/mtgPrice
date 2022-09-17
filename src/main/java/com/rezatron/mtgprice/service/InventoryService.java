@@ -1,13 +1,13 @@
 package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.dto.InventoryDto;
+import com.rezatron.mtgprice.entity.Inventory;
+import com.rezatron.mtgprice.entity.User;
 import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.inventory.BulkInventory;
-import com.rezatron.mtgprice.entity.Inventory;
 import com.rezatron.mtgprice.mapper.InventoryMapper;
 import com.rezatron.mtgprice.repository.CardRepository;
 import com.rezatron.mtgprice.repository.InventoryRepository;
-import com.rezatron.mtgprice.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
