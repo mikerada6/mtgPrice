@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>mtgPrice</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>mtgPrice</name>
     <description>mtgPrice</description>

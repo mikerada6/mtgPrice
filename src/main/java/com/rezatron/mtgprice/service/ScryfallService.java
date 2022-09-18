@@ -9,9 +9,11 @@ import com.rezatron.mtgprice.dto.magic.scryfall.BulkData;
 import com.rezatron.mtgprice.dto.magic.scryfall.BulkDataInformation;
 import com.rezatron.mtgprice.dto.magic.scryfall.Datum;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
+import com.rezatron.mtgprice.entity.Price;
 import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.exception.ScryFallException;
 import com.rezatron.mtgprice.queue.QueueSender;
+import com.rezatron.mtgprice.repository.PriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,6 +53,9 @@ class ScryfallService {
     private Integer batchSize;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private
+    PriceRepository priceRepository;
 
     public
     ScryfallCard getCardFromJSON(String json)
@@ -234,6 +239,13 @@ class ScryfallService {
                      .filter( scryfallCard -> scryfallCard.getGames().contains( "paper" ) && scryfallCard.getLangauage()
                                                                                                          .equalsIgnoreCase( "en" ) )
                      .collect( Collectors.toList() );
+        int cardsSize = cards.size();
+        log.info("Getting prices already in database");
+        List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
+        log.info("{} prices in database looking to add {} new cards.", alreadyInDataBase.size(), cards.size());
+        cards = cards.stream().filter(c -> !alreadyInDataBase.contains( c.getId() )).collect( Collectors.toList());
+        log.info("{} was reduced down to {}", cardsSize, cards.size());
+
         for (ScryfallCard card : cards) {
             card.setTimeStamp( timeStamp.toString() );
 

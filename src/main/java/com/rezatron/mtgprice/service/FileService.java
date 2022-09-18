@@ -1,7 +1,7 @@
 package com.rezatron.mtgprice.service;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -9,12 +9,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public
 class FileService {
+
+    @Value( "${mtg.download.baselocation}" )
+    private String baseFileLocation;
 
     public
     boolean doesFileExist(String fileName)
@@ -91,4 +96,18 @@ class FileService {
         }
     }
 
+    public
+    List<String> getAvailableBulkDataFiles() {
+        String filePath = baseFileLocation + "/bulkData/";
+        File[] files = new File( filePath ).listFiles();
+        //If this pathname does not denote a directory, then listFiles() returns null.
+        List<String> results = new ArrayList<String>();
+        for (File file : files) {
+            if (file.isFile()) {
+                results.add( file.getName() );
+            }
+        }
+        return results.stream().filter( f -> f.contains( ".json" ) ).map( f -> baseFileLocation + "/bulkData/" + f )
+                      .collect( Collectors.toList() );
+    }
 }
