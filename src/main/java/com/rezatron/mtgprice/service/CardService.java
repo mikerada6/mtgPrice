@@ -5,13 +5,13 @@ import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
-import com.rezatron.mtgprice.entity.Price;
 import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.entity.wizards.CardFace;
 import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
 import com.rezatron.mtgprice.entity.wizards.Images;
 import com.rezatron.mtgprice.repository.CardFaceRepository;
 import com.rezatron.mtgprice.repository.CardRepository;
+import com.rezatron.mtgprice.repository.PriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,9 @@ class CardService {
     @Autowired
     CardFaceRepository cardFaceRepository;
 
+    @Autowired
+    private PriceRepository priceRepository;
+
     @Transactional( readOnly = true )
     public
     Card findById(String id) {
@@ -44,12 +48,20 @@ class CardService {
         return cardRepository.findById( id ).orElse( null );
     }
 
-    @Transactional
+    @Transactional( readOnly = true )
+    public
+    List<Card> findByIdIn(Collection<String> ids) {
+        log.info( "cardfindByIdIn {}.",
+                  ids.size() );
+        return cardRepository.findByIdIn( ids );
+    }
+
+
     public
     Card updateCard(ScryfallCard scryfallCard, Optional<LocalDateTime> optionalTimestamp)
     {
         LocalDateTime timestamp = optionalTimestamp.orElse( LocalDateTime.now() );
-        Card card = cardRepository.findById( scryfallCard.getId() ).orElse( new Card() );
+        Card card = new Card();
         card.setId( scryfallCard.getId() );
         card.setName( scryfallCard.getName() );
         card.setMtgSet( scryfallCard.getSet() );
@@ -59,7 +71,7 @@ class CardService {
         card.setReleasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) );
         card.setTypeLine( scryfallCard.getTypeLine() );
         card.setRarity( Rarity.fromShortName( scryfallCard.getRarity() ) );
-        card.setLanguage( scryfallCard.getLangauage() );
+        card.setLanguage( scryfallCard.getLanguage() );
         card.setOracleId( scryfallCard.getOracleId() );
         card.setOracleText( scryfallCard.getOracleText() );
         if (scryfallCard.getColors() != null) {
@@ -70,17 +82,7 @@ class CardService {
             card.setColorIdentity( scryfallCard.getColorIdentity().stream().map( c -> Color.getFromLabel( c ) )
                                                .collect( Collectors.toSet() ) );
         }
-        Set<Price> prices = card.getPrices();
-        if (prices == null) {
-            prices = new HashSet<>();
-        }
 
-        prices.add( Price.builder().usd( scryfallCard.getPrices().getUsd() )
-                         .usdFoil( scryfallCard.getPrices().getUsdFoil() )
-                         .usdEtched( scryfallCard.getPrices().getUsdEtched() ).eur( scryfallCard.getPrices().getEur() )
-                         .eurFoil( scryfallCard.getPrices().getEurFoil() )
-
-                         .tix( scryfallCard.getPrices().getTix() ).timestamp( timestamp ).card( card ).build() );
         ImageUris temp = scryfallCard.getImageUris();
         if (temp != null) {
             card.setImages( Images.builder().artCrop( temp.getArtCrop() ).borderCrop( temp.getBorderCrop() )
@@ -131,7 +133,6 @@ class CardService {
             }
             cardFaceA.setCard( card );
             cardFaceB.setCard( card );
-            //TODO take care of flip side images
             cardFaces.add( cardFaceA );
             cardFaces.add( cardFaceB );
             card.setCardFaces( cardFaces );
@@ -144,6 +145,25 @@ class CardService {
     public
     List<Card> saveAll(List<Card> cardsToSave) {
         return cardRepository.saveAllAndFlush( cardsToSave );
+    }
+
+    @Transactional
+    public
+    String getOracleIdFromName(String cardName) {
+        Optional<Card> card = cardRepository.findFirstByName( cardName );
+        if(card.isPresent())
+        {
+            return card.get().getOracleId();
+        }
+        else
+        {
+            Optional<CardFace> cardFace = cardFaceRepository.findFirstByName( cardName );
+            if(cardFace.isPresent())
+            {
+                return cardFace.get().getCard().getOracleId();
+            }
+        }
+        return null;
     }
 
     public

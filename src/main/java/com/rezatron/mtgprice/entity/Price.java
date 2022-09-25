@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -27,11 +28,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table( name = "Price",
-        indexes = {@Index( name = "idx_price_card_id_timestamp",
-                           columnList = "card_id, timestamp" ), @Index( name = "idx_price_timestamp",
-                                                                        columnList = "timestamp" )},
+        indexes = {@Index( name = "idx_price_timestamp",
+                           columnList = "timestamp" )},
         uniqueConstraints = {@UniqueConstraint( name = "uc_price_timestamp_card_id",
-                                                columnNames = {"timestamp", "card_id"} )} )
+                                                columnNames = {"card_id", "timestamp"} )} )
 @ToString
 @EqualsAndHashCode( exclude = {"id"} )
 @Entity
@@ -55,7 +55,8 @@ class Price {
     @Column( nullable = true )
     private Double usdFoil;
 
-    @ManyToOne( cascade = CascadeType.ALL,
+    @NotNull
+    @ManyToOne( cascade = CascadeType.MERGE,
                 optional = false )
     @JoinColumn( name = "card_id",
                  nullable = false )

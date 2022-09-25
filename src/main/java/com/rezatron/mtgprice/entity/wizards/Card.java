@@ -13,10 +13,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,7 +33,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,9 +46,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Table( name = "Card",
         indexes = {@Index( name = "idx_card_mtgset",
-                           columnList = "mtgSet" )} )
+                           columnList = "mtgSet" ), @Index( name = "idx_card_oracleid",
+                                                            columnList = "oracleId" )} )
 @ToString
-@EqualsAndHashCode( exclude = {"prices", "inventories", "images", "decks"} )
+@EqualsAndHashCode( exclude = {"inventories", "images", "decks"} )
 @Entity
 @Slf4j
 @JsonPropertyOrder( alphabetic = true )
@@ -84,12 +90,6 @@ class Card implements Comparable<Card> {
     @Enumerated( EnumType.STRING )
     private Rarity rarity;
 
-    @OneToMany( mappedBy = "card",
-                cascade = CascadeType.ALL,
-                orphanRemoval = true,
-                fetch = FetchType.LAZY )
-    private Set<Price> prices = new LinkedHashSet<>();
-
     @OneToOne( fetch = FetchType.LAZY,
                cascade = {CascadeType.ALL} )
     @JoinColumn( name = "images_id" )
@@ -104,6 +104,11 @@ class Card implements Comparable<Card> {
                 cascade = CascadeType.ALL,
                 orphanRemoval = true )
     private Set<Inventory> inventories = new LinkedHashSet<>();
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
 
     public

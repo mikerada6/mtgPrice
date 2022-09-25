@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,6 +37,9 @@ public
 class Deck {
     @Id
     private String id;
+    @NotEmpty
+    @NotNull
+    @Column( nullable = false )
     private String name;
 
     @CreationTimestamp
@@ -41,14 +47,24 @@ class Deck {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
-    @ManyToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "user_id" )
+    @NotNull
+    @ManyToOne( cascade = CascadeType.ALL,
+                optional = false )
+    @JoinColumn( name = "user_id",
+                 nullable = false )
     private User user;
 
+    @NotNull
     @OneToMany( mappedBy = "deck",
                 cascade = CascadeType.ALL,
                 orphanRemoval = true )
     private Set<DeckListItem> deckList = new LinkedHashSet<>();
+
+    public void addDeckListItem(DeckListItem deckListItem)
+    {
+        deckListItem.setDeck( this );
+        deckList.add(deckListItem);
+    }
 
 
     @PrePersist

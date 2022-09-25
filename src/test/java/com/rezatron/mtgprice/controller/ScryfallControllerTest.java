@@ -77,7 +77,7 @@ class ScryfallControllerTest {
                                               .oracleId( "44623693-51d6-49ad-8cd7-140505caf02f" )
                                               .multiverseIds( Arrays.asList( 109722L ) ).mtgoId( 25527L )
                                               .mtgoFoilId( 14240L ).tcgplayerId( 14240L ).cardMarketId( 13850L )
-                                              .name( "Fury Sliver" ).langauage( "en" ).build();
+                                              .name( "Fury Sliver" ).language( "en" ).build();
 
         ScryfallCard WestvaleAbbey = ScryfallCard.builder().object( "card" )
                                                  .id( "b245e80e-a113-4f34-a089-e3e514eaddc0" )
@@ -85,7 +85,7 @@ class ScryfallControllerTest {
                                                  .multiverseIds( Arrays.asList() ).tcgplayerId( 116919L )
                                                  .cardMarketId( 289305L )
                                                  .name( "Westvale Abbey // Ormendahl, Profane Prince" )
-                                                 .langauage( "en" ).build();
+                                                 .language( "en" ).build();
         List<ScryfallCard> scryfallCards = Arrays.asList( furySliver,
                                                           WestvaleAbbey );
 
@@ -126,7 +126,7 @@ class ScryfallControllerTest {
                                               .oracleId( "44623693-51d6-49ad-8cd7-140505caf02f" )
                                               .multiverseIds( Arrays.asList( 109722L ) ).mtgoId( 25527L )
                                               .mtgoFoilId( 14240L ).tcgplayerId( 14240L ).cardMarketId( 13850L )
-                                              .name( "Fury Sliver" ).langauage( "en" ).build();
+                                              .name( "Fury Sliver" ).language( "en" ).build();
 
         ScryfallCard WestvaleAbbey = ScryfallCard.builder().object( "card" )
                                                  .id( "b245e80e-a113-4f34-a089-e3e514eaddc0" )
@@ -134,7 +134,7 @@ class ScryfallControllerTest {
                                                  .multiverseIds( Arrays.asList() ).tcgplayerId( 116919L )
                                                  .cardMarketId( 289305L )
                                                  .name( "Westvale Abbey // Ormendahl, Profane Prince" )
-                                                 .langauage( "en" ).build();
+                                                 .language( "en" ).build();
         List<ScryfallCard> scryfallCards = Arrays.asList( furySliver,
                                                           WestvaleAbbey );
 
