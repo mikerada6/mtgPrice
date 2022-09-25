@@ -225,7 +225,8 @@ class ScryfallService {
 
             if (pricesToSave.size() >= batchSize) {
                 log.info( "Saving {} prices and {} cards.",
-                          pricesToSave.size(), cardsToSave.size() );
+                          pricesToSave.size(),
+                          cardsToSave.size() );
                 savedCards += cardService.saveAll( cardsToSave ).size();
                 savedPrices += priceService.saveAll( pricesToSave ).size();
                 cardsToSave.clear();
@@ -238,7 +239,8 @@ class ScryfallService {
         savedCards += cardService.saveAll( cardsToSave ).size();
         savedPrices += priceService.saveAll( pricesToSave ).size();
         log.info( "Saved a total of {} prices and {} cards.",
-                  savedPrices, savedCards );
+                  savedPrices,
+                  savedCards );
         return savedPrices;
 
     }

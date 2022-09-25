@@ -28,8 +28,6 @@ interface CardRepository extends JpaRepository<Card, String> {
             String name);
 
 
-
-
     List<Card> findByMtgSetOrderByCollectorNumberAsc(String mtgSet);
 
     Optional<Card> findFirstByNameIgnoreCase(String name);

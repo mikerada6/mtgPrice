@@ -17,7 +17,4 @@ interface CardFaceRepository extends JpaRepository<CardFace, String> {
             String name);
 
 
-
-
-
 }

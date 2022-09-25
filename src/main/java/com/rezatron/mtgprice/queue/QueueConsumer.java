@@ -40,7 +40,7 @@ class QueueConsumer {
             scryfallService.saveCards( cardArray );
         } catch (Exception e) {
             log.error( "what is the problem here?" );
-            log.error(e.toString());
+            log.error( e.toString() );
         }
 
 

@@ -151,15 +151,11 @@ class CardService {
     public
     String getOracleIdFromName(String cardName) {
         Optional<Card> card = cardRepository.findFirstByName( cardName );
-        if(card.isPresent())
-        {
+        if (card.isPresent()) {
             return card.get().getOracleId();
-        }
-        else
-        {
+        } else {
             Optional<CardFace> cardFace = cardFaceRepository.findFirstByName( cardName );
-            if(cardFace.isPresent())
-            {
+            if (cardFace.isPresent()) {
                 return cardFace.get().getCard().getOracleId();
             }
         }
