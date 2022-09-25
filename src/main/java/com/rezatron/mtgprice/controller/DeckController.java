@@ -1,7 +1,6 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.entity.Deck;
-import com.rezatron.mtgprice.entity.DeckListItem;
 import com.rezatron.mtgprice.entity.User;
 import com.rezatron.mtgprice.service.DeckService;
 import com.rezatron.mtgprice.service.UserService;

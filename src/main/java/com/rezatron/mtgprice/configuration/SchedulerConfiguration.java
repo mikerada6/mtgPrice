@@ -8,10 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class SchedulerConfiguration {
+public
+class SchedulerConfiguration {
     @Bean
     public
     LockProvider lockProvider(DataSource dataSource) {
-        return new JdbcTemplateLockProvider( dataSource);
+        return new JdbcTemplateLockProvider( dataSource );
     }
 }

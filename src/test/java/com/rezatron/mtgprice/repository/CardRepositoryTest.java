@@ -2,17 +2,13 @@ package com.rezatron.mtgprice.repository;
 
 
 import com.rezatron.mtgprice.entity.wizards.Card;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
-import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @DataJpaTest
@@ -29,7 +25,7 @@ class CardRepositoryTest {
     InventoryRepository inventoryRepository;
     @Autowired
     DeckRepository deckRepository;
-//    @Autowired
+    //    @Autowired
 //    private TestEntityManager entityManager;
     private Card card;
 

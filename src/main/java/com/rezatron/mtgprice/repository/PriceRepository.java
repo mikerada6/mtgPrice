@@ -14,9 +14,11 @@ interface PriceRepository extends JpaRepository<Price, String> {
             @NonNull
             LocalDateTime timestamp);
 
-    @Query( value = "select card_id from price where timestamp=?1", nativeQuery = true)
+    @Query( value = "select card_id from price where timestamp=?1",
+            nativeQuery = true )
     public
-    List<String> findCardIdsByTimestamp(@NonNull
-                                        LocalDateTime timestamp);
+    List<String> findCardIdsByTimestamp(
+            @NonNull
+            LocalDateTime timestamp);
 
 }

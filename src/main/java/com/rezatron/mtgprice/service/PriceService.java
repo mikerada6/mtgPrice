@@ -1,8 +1,6 @@
 package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.entity.Price;
-import com.rezatron.mtgprice.entity.wizards.Card;
-import com.rezatron.mtgprice.repository.CardRepository;
 import com.rezatron.mtgprice.repository.PriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

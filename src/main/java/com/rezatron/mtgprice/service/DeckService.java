@@ -54,17 +54,16 @@ class DeckService {
             }
             DeckListItem dli = DeckListItem.builder().cardName( mainBoardCard ).quantity( quantity ).sideBoard( false )
                                            .oracle_id( oracleId ).build();
-            d.addDeckListItem(dli );
+            d.addDeckListItem( dli );
         }
 
         boolean sideBoard = false;
         for (String sideBoardCard : deckListArray) {
             if (sideBoardCard.equals( "" )) {
-                sideBoard=true;
+                sideBoard = true;
                 continue;
             }
-            if(!sideBoard)
-            {
+            if (!sideBoard) {
                 continue;
             }
 
@@ -88,7 +87,7 @@ class DeckService {
             }
             DeckListItem dli = DeckListItem.builder().cardName( sideBoardCard ).quantity( quantity ).sideBoard( true )
                                            .oracle_id( oracleId ).build();
-            d.addDeckListItem(dli );
+            d.addDeckListItem( dli );
         }
 
 

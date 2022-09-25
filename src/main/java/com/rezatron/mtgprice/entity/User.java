@@ -29,7 +29,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table( name = "User" )
-@ToString(exclude = {"inventories", "decks"})
+@ToString( exclude = {"inventories", "decks"} )
 @EqualsAndHashCode( exclude = {"inventories", "decks"} )
 @Entity
 @Slf4j
@@ -41,7 +41,7 @@ class User {
     private String id;
     private String userName;
     private String firstName;
-    @ApiModelProperty(readOnly = true)
+    @ApiModelProperty( readOnly = true )
     private String lastName;
     @CreationTimestamp
     private LocalDateTime createDateTime;

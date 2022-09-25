@@ -17,11 +17,12 @@ class ScryfallScheduler {
 
     @Scheduled( cron = "* * * * * *" )
     @SchedulerLock( name = "ScryfallScheduler_bulkDataUpdate",
-                    lockAtLeastForString = "PT5M", lockAtMostForString = "PT59M")
+                    lockAtLeastForString = "PT5M",
+                    lockAtMostForString = "PT59M" )
     public
     void bulkDataUpdate() {
-        log.info("Running schedule to get bulk data.");
-        scryfallController.bulkDataUpdate(null);
-        log.info("scheduled task done.");
+        log.info( "Running schedule to get bulk data." );
+        scryfallController.bulkDataUpdate( null );
+        log.info( "scheduled task done." );
     }
 }

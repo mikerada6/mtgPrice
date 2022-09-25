@@ -60,10 +60,11 @@ class Deck {
                 orphanRemoval = true )
     private Set<DeckListItem> deckList = new LinkedHashSet<>();
 
-    public void addDeckListItem(DeckListItem deckListItem)
+    public
+    void addDeckListItem(DeckListItem deckListItem)
     {
         deckListItem.setDeck( this );
-        deckList.add(deckListItem);
+        deckList.add( deckListItem );
     }
 
 

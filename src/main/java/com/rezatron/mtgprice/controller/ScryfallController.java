@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping( "/api/v1/scryfall" )
@@ -38,14 +37,15 @@ class ScryfallController {
     ResponseEntity reloadFromBackUp()
     {
         HashMap<String, String> response = new HashMap<>();
-        log.info("bulkDataUpdate");
+        log.info( "bulkDataUpdate" );
         List<String> files = fileService.getAvailableBulkDataFiles();
-        log.info("{} files to review", files.size());
-        for(String fileLocation: files)
-        {
+        log.info( "{} files to review",
+                  files.size() );
+        for (String fileLocation : files) {
             ResponseEntity tempResponse = bulkDataUpdate( fileLocation );
 
-                response.put(fileLocation, tempResponse.getStatusCode().toString());
+            response.put( fileLocation,
+                          tempResponse.getStatusCode().toString() );
 
         }
         return ResponseEntity.status( HttpStatus.OK ).body( response );
