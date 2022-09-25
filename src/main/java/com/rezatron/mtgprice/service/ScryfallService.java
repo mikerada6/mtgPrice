@@ -29,7 +29,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +46,8 @@ class ScryfallService {
     @Autowired
     CardService cardService;
     @Autowired
+    PriceService priceService;
+    @Autowired
     QueueSender queueSender;
     @Value( "${mtg.download.baselocation}" )
     private String baseFileLocation;
@@ -54,8 +58,7 @@ class ScryfallService {
     @Autowired
     private FileService fileService;
     @Autowired
-    private
-    PriceRepository priceRepository;
+    private PriceRepository priceRepository;
 
     public
     ScryfallCard getCardFromJSON(String json)
@@ -183,33 +186,61 @@ class ScryfallService {
 
         log.info( "Saving {} cards.",
                   scryfallCards.size() );
+
+        Map<String, Card> dataBaseCards = cardService
+                .findByIdIn( scryfallCards.stream().map( c -> c.getId() ).collect( Collectors.toList() ) ).stream()
+                .collect( Collectors.toMap( Card::getId,
+                                            Function.identity() ) );
         List<Card> cardsToSave = new ArrayList<>();
+        List<Price> pricesToSave = new ArrayList<>();
         long savedCards = 0;
-        long skippedCards = 0;
+        long savedPrices = 0;
         for (ScryfallCard scryfallCard : scryfallCards) {
             String dateTime = scryfallCard.getTimeStamp();
             LocalDateTime timeStamp = LocalDateTime.parse( dateTime,
                                                            cardDateFormat );
-            Card tempCard = cardService.updateCard( scryfallCard,
-                                                    Optional.of( timeStamp ) );
-            if (tempCard != null) {
-                cardsToSave.add( tempCard );
-                if (cardsToSave.size() >= batchSize) {
-                    log.info( "Saving {} cards.",
-                              cardsToSave.size() );
-                    savedCards += cardService.saveAll( cardsToSave ).size();
-                    cardsToSave.clear();
-                    log.info( "Done saving batch.  Still have {} left to save.",
-                              scryfallCards.size() - savedCards - skippedCards );
-                }
+            if (dataBaseCards.containsKey( scryfallCard.getId() )) {
+                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
+                               .usdFoil( scryfallCard.getPrices().getUsdFoil() )
+                               .usdEtched( scryfallCard.getPrices().getUsdEtched() )
+                               .eur( scryfallCard.getPrices().getEur() )
+                               .eurFoil( scryfallCard.getPrices().getEurFoil() )
+                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp )
+                               .card( dataBaseCards.get( scryfallCard.getId() ) ).build();
+                pricesToSave.add( p );
             } else {
-                skippedCards++;
+                Card tempCard = cardService.updateCard( scryfallCard,
+                                                        Optional.of( timeStamp ) );
+                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
+                               .usdFoil( scryfallCard.getPrices().getUsdFoil() )
+                               .usdEtched( scryfallCard.getPrices().getUsdEtched() )
+                               .eur( scryfallCard.getPrices().getEur() )
+                               .eurFoil( scryfallCard.getPrices().getEurFoil() )
+                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp ).card( tempCard )
+                               .build();
+                cardsToSave.add( tempCard );
+                pricesToSave.add( p );
+            }
+
+
+            if (pricesToSave.size() >= batchSize) {
+                log.info( "Saving {} prices and {} cards.",
+                          pricesToSave.size(), cardsToSave.size() );
+                savedCards += cardService.saveAll( cardsToSave ).size();
+                savedPrices += priceService.saveAll( pricesToSave ).size();
+                cardsToSave.clear();
+                pricesToSave.clear();
+                log.info( "Done saving batch.  Still have {} left to save.",
+                          scryfallCards.size() - savedPrices );
+
             }
         }
-        log.info( "Saving {} cards.",
-                  cardsToSave.size() );
         savedCards += cardService.saveAll( cardsToSave ).size();
-        return savedCards;
+        savedPrices += priceService.saveAll( pricesToSave ).size();
+        log.info( "Saved a total of {} prices and {} cards.",
+                  savedPrices, savedCards );
+        return savedPrices;
+
     }
 
 
@@ -236,15 +267,19 @@ class ScryfallService {
                                                        fileDateFormat );
         ArrayList<ScryfallCard> cardsToSend = new ArrayList<>();
         cards = cards.stream()
-                     .filter( scryfallCard -> scryfallCard.getGames().contains( "paper" ) && scryfallCard.getLangauage()
+                     .filter( scryfallCard -> scryfallCard.getGames().contains( "paper" ) && scryfallCard.getLanguage()
                                                                                                          .equalsIgnoreCase( "en" ) )
                      .collect( Collectors.toList() );
         int cardsSize = cards.size();
-        log.info("Getting prices already in database");
+        log.info( "Getting prices already in database" );
         List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
-        log.info("{} prices in database looking to add {} new cards.", alreadyInDataBase.size(), cards.size());
-        cards = cards.stream().filter(c -> !alreadyInDataBase.contains( c.getId() )).collect( Collectors.toList());
-        log.info("{} was reduced down to {}", cardsSize, cards.size());
+        log.info( "{} prices in database looking to add {} new cards.",
+                  alreadyInDataBase.size(),
+                  cards.size() );
+        cards = cards.stream().filter( c -> !alreadyInDataBase.contains( c.getId() ) ).collect( Collectors.toList() );
+        log.info( "{} was reduced down to {}",
+                  cardsSize,
+                  cards.size() );
 
         for (ScryfallCard card : cards) {
             card.setTimeStamp( timeStamp.toString() );

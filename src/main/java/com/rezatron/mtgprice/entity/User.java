@@ -2,6 +2,7 @@ package com.rezatron.mtgprice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table( name = "User" )
-@ToString()
+@ToString(exclude = {"inventories", "decks"})
 @EqualsAndHashCode( exclude = {"inventories", "decks"} )
 @Entity
 @Slf4j
@@ -40,6 +41,7 @@ class User {
     private String id;
     private String userName;
     private String firstName;
+    @ApiModelProperty(readOnly = true)
     private String lastName;
     @CreationTimestamp
     private LocalDateTime createDateTime;

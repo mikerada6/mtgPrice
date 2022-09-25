@@ -2,16 +2,13 @@ package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.entity.Deck;
 import com.rezatron.mtgprice.entity.DeckListItem;
-import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.User;
+import com.rezatron.mtgprice.exception.UnknownCardException;
 import com.rezatron.mtgprice.repository.CardRepository;
 import com.rezatron.mtgprice.repository.DeckRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -24,28 +21,77 @@ class DeckService {
     CardRepository cardRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    CardService cardService;
 
     public
-    Deck createDeck(String deckList) {
-        HashMap<String, Integer> deckListHashMap = new HashMap<String, Integer>();
-        deckListHashMap.put( "Archmage's Charm",
-                             2 );
-        deckListHashMap.put( "Brazen Borrower",
-                             1 );
-        deckListHashMap.put( "Consider",
-                             4 );
+    Deck createDeck(String deckList, String deckName, User u) {
         Deck d = new Deck();
-        Set<DeckListItem> deckListCards = new HashSet<>();
-        for (String card : deckListHashMap.keySet()) {
-            Card dbCard = cardRepository.findFirstByNameIgnoreCase( card ).orElse( null );
-            if (dbCard != null) {
-                deckListCards.add( DeckListItem.builder().cardName( card ).oracle_id( dbCard.getOracleId() )
-                                               .quantity( deckListHashMap.get( card ) ).deck( d ).build() );
+        d.setName( deckName );
+        d.setUser( u );
+        String[] deckListArray = deckList.split( "\n" );
+        for (String mainBoardCard : deckListArray) {
+            if (mainBoardCard.equals( "" )) {
+                break;
             }
+            String[] tokens = mainBoardCard.split( " ",
+                                                   2 );
+            int quantity = 0;
+            try {
+                quantity = Integer.parseInt( tokens[0] );
+            } catch (NumberFormatException e) {
+                log.error( "Could not parse {} into a number",
+                           tokens[0] );
+                throw new UnknownCardException(
+                        "Could not parse " + tokens[0] + " into a number for card " + mainBoardCard );
+
+            }
+            String oracleId = cardService.getOracleIdFromName( tokens[1] );
+            if (oracleId == null) {
+                log.warn( "Was given a card with name {} unable to find it in our database",
+                          mainBoardCard );
+                throw new UnknownCardException( "Unknown card with name " + mainBoardCard + "." );
+            }
+            DeckListItem dli = DeckListItem.builder().cardName( mainBoardCard ).quantity( quantity ).sideBoard( false )
+                                           .oracle_id( oracleId ).build();
+            d.addDeckListItem(dli );
         }
-        d.setDeckList( deckListCards );
-        d.setName( "Murktide Regent" );
-        d.setUser( userService.findById( "ceb69f39-ab31-4e69-b8c1-6ebd00f4dbc7" ) );
+
+        boolean sideBoard = false;
+        for (String sideBoardCard : deckListArray) {
+            if (sideBoardCard.equals( "" )) {
+                sideBoard=true;
+                continue;
+            }
+            if(!sideBoard)
+            {
+                continue;
+            }
+
+            String[] tokens = sideBoardCard.split( " ",
+                                                   2 );
+            int quantity = 0;
+            try {
+                quantity = Integer.parseInt( tokens[0] );
+            } catch (NumberFormatException e) {
+                log.error( "Could not parse {} into a number",
+                           tokens[0] );
+                throw new UnknownCardException(
+                        "Could not parse " + tokens[0] + " into a number for card " + sideBoardCard );
+
+            }
+            String oracleId = cardService.getOracleIdFromName( tokens[1] );
+            if (oracleId == null) {
+                log.warn( "Was given a card with name {} unable to find it in our database",
+                          sideBoardCard );
+                throw new UnknownCardException( "Unknown card with name " + sideBoardCard + "." );
+            }
+            DeckListItem dli = DeckListItem.builder().cardName( sideBoardCard ).quantity( quantity ).sideBoard( true )
+                                           .oracle_id( oracleId ).build();
+            d.addDeckListItem(dli );
+        }
+
+
         return deckRepository.save( d );
     }
 }

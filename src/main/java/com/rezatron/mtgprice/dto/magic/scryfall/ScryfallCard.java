@@ -85,7 +85,7 @@ class ScryfallCard implements Serializable {
     private List<Object> keywords;
     @SerializedName( value = "langauage",
                      alternate = {"lang"} )
-    private String langauage;
+    private String language;
     @SerializedName( "layout" )
     private String layout;
     @SerializedName( "legalities" )
