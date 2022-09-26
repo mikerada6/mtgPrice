@@ -1,12 +1,12 @@
 package com.rezatron.mtgprice.repository;
 
 import com.rezatron.mtgprice.entity.Inventory;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
 public
-interface InventoryRepository extends JpaRepository<Inventory, String> {
+interface InventoryRepository extends MongoRepository<Inventory, String> {
     List<Inventory> findByUser_Id(String id);
 
 

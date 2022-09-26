@@ -43,7 +43,7 @@ class ImageController {
                 return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( "Error creating folders." );
             }
         }
-        imageService.saveAllImages();
+//        imageService.saveAllImages();
         return ResponseEntity.status( HttpStatus.NO_CONTENT ).body( "Created image folder." );
     }
 }

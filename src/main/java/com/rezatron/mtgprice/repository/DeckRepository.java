@@ -1,8 +1,8 @@
 package com.rezatron.mtgprice.repository;
 
 import com.rezatron.mtgprice.entity.Deck;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 public
-interface DeckRepository extends JpaRepository<Deck, String> {
+interface DeckRepository extends MongoRepository<Deck, String> {
 }

@@ -39,66 +39,66 @@ class ImageService {
     @Value( "${mtg.download.baselocation}" )
     private String baseFileLocation;
 
-    public
-    void saveAllImages() {
-        List<String> sets = cardRepository.findDistinctSets();
-        log.info( "Found {} different sets.",
-                  sets.size() );
-        for (String set : sets) {
-            HashMap<String, URL> imagesToDownload = new HashMap<>();
-            log.info( "working on set: {}.",
-                      set );
-            List<Card> cards = cardRepository.findByMtgSetOrderByCollectorNumberAsc( set );
-            List<CardFace> cardFaces = cardFaceRepository.findByCard_MtgSetOrderByCard_CollectorNumberAsc( set );
-            for (Card c : cards) {
-                URL url = getImageLocations( c );
-                if (url != null) {
-                    String path = baseFileLocation + "/images/all/" + c.getId() + ".jpeg";
-                    imagesToDownload.put( path,
-                                          url );
-                }
-            }
-            for (CardFace c : cardFaces) {
-                URL url = getImageLocations( c );
-                if (url != null) {
-                    String path = baseFileLocation + "/images/all/" + c.getId() + ".jpeg";
-                    imagesToDownload.put( path,
-                                          url );
-                }
-            }
-
-            log.info( "about to save {} cards from set {}.",
-                      imagesToDownload.size(),
-                      set );
-            for (String key : imagesToDownload.keySet()) {
-                if (!Files.exists( Path.of( key ) )) {
-                    try {
-                        InputStream in = new BufferedInputStream( imagesToDownload.get( key ).openStream() );
-                        OutputStream out = new BufferedOutputStream( new FileOutputStream( key ) );
-
-                        for (int i; (i = in.read()) != -1; ) {
-                            out.write( i );
-                        }
-                        in.close();
-                        out.close();
-                    } catch (Exception e) {
-                        log.error( "Error trying to save at {} with error {}.",
-                                   key,
-                                   e );
-                    }
-                    //We introduce a slight delay so we don't overhit scryfall's severs
-                    try {
-                        Thread.sleep( 100 );
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException( e );
-                    }
-                } else {
-                    log.info( "Skipping {} because it already exists.",
-                              key );
-                }
-            }
-        }
-    }
+//    public
+//    void saveAllImages() {
+//        List<String> sets = cardRepository.findDistinctSets();
+//        log.info( "Found {} different sets.",
+//                  sets.size() );
+//        for (String set : sets) {
+//            HashMap<String, URL> imagesToDownload = new HashMap<>();
+//            log.info( "working on set: {}.",
+//                      set );
+//            List<Card> cards = cardRepository.findByMtgSetOrderByCollectorNumberAsc( set );
+//            List<CardFace> cardFaces = cardFaceRepository.findByCard_MtgSetOrderByCard_CollectorNumberAsc( set );
+//            for (Card c : cards) {
+//                URL url = getImageLocations( c );
+//                if (url != null) {
+//                    String path = baseFileLocation + "/images/all/" + c.getId() + ".jpeg";
+//                    imagesToDownload.put( path,
+//                                          url );
+//                }
+//            }
+//            for (CardFace c : cardFaces) {
+//                URL url = getImageLocations( c );
+//                if (url != null) {
+//                    String path = baseFileLocation + "/images/all/" + c.getId() + ".jpeg";
+//                    imagesToDownload.put( path,
+//                                          url );
+//                }
+//            }
+//
+//            log.info( "about to save {} cards from set {}.",
+//                      imagesToDownload.size(),
+//                      set );
+//            for (String key : imagesToDownload.keySet()) {
+//                if (!Files.exists( Path.of( key ) )) {
+//                    try {
+//                        InputStream in = new BufferedInputStream( imagesToDownload.get( key ).openStream() );
+//                        OutputStream out = new BufferedOutputStream( new FileOutputStream( key ) );
+//
+//                        for (int i; (i = in.read()) != -1; ) {
+//                            out.write( i );
+//                        }
+//                        in.close();
+//                        out.close();
+//                    } catch (Exception e) {
+//                        log.error( "Error trying to save at {} with error {}.",
+//                                   key,
+//                                   e );
+//                    }
+//                    //We introduce a slight delay so we don't overhit scryfall's severs
+//                    try {
+//                        Thread.sleep( 100 );
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException( e );
+//                    }
+//                } else {
+//                    log.info( "Skipping {} because it already exists.",
+//                              key );
+//                }
+//            }
+//        }
+//    }
 
     private
     URL getImageLocations(Card c)

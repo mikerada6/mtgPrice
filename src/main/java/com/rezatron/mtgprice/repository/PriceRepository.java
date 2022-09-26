@@ -1,7 +1,7 @@
 package com.rezatron.mtgprice.repository;
 
 import com.rezatron.mtgprice.entity.Price;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public
-interface PriceRepository extends JpaRepository<Price, String> {
+interface PriceRepository extends MongoRepository<Price, String> {
     List<Price> findByTimestamp(
             @NonNull
             LocalDateTime timestamp);

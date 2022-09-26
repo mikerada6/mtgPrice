@@ -2,6 +2,7 @@ package com.rezatron.mtgprice.entity;
 
 import com.rezatron.mtgprice.dto.LegalStatus;
 import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.OracleCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,12 +35,6 @@ public
 class Legalities {
     @Id
     private String id;
-    @OneToOne( cascade = CascadeType.ALL,
-               optional = false,
-               orphanRemoval = true )
-    @JoinColumn( name = "card_id",
-                 nullable = false )
-    private Card card;
     @Enumerated( EnumType.STRING )
     private LegalStatus alchemy;
     @Enumerated( EnumType.STRING )
@@ -78,24 +73,4 @@ class Legalities {
     private LegalStatus standard;
     @Enumerated( EnumType.STRING )
     private LegalStatus vintage;
-
-
-    public
-    Card getCard() {
-        return card;
-    }
-
-    public
-    void setCard(Card card) {
-        this.card = card;
-    }
-
-
-    @PrePersist
-    protected
-    void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID().toString();
-        }
-    }
 }

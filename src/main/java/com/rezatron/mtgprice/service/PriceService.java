@@ -19,12 +19,12 @@ class PriceService {
     @Transactional
     public
     List<Price> saveAll(List<Price> pricesToSave) {
-        return priceRepository.saveAllAndFlush( pricesToSave );
+        return priceRepository.saveAll( pricesToSave );
     }
 
     @Transactional
     public
     Price save(Price price) {
-        return priceRepository.saveAndFlush( price );
+        return priceRepository.save( price );
     }
 }

@@ -34,7 +34,7 @@ class InventoryService {
         Inventory inventory = inventoryMapper.inventoryDtoToInventory( dto );
         inventory.setUser( user );
         if (inventory.getCard() != null && inventory.getUser() != null) {
-            inventory = inventoryRepository.saveAndFlush( inventory );
+            inventory = inventoryRepository.save( inventory );
             return inventoryMapper.inventoryToInventoryDto( inventory );
         }
         return null;

@@ -24,7 +24,8 @@ class CardController {
     public
     ResponseEntity getSuperTypes()
     {
-        List<String> superTypes = cardService.getSuperTypes();
+//        List<String> superTypes = cardService.getSuperTypes();
+        List<String> superTypes = null;
         return ResponseEntity.status( HttpStatus.OK ).body( superTypes );
     }
 }

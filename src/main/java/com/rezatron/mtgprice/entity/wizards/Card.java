@@ -108,19 +108,19 @@ class Card implements Comparable<Card> {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
-    @OneToOne( mappedBy = "card",cascade = CascadeType.ALL,
-               orphanRemoval = true )
-    private Legalities legalities;
-
-    public
-    Legalities getLegalities() {
-        return legalities;
-    }
-
-    public
-    void setLegalities(Legalities legalities) {
-        this.legalities = legalities;
-    }
+//    @OneToOne( mappedBy = "card",cascade = CascadeType.ALL,
+//               orphanRemoval = true )
+//    private Legalities legalities;
+//
+//    public
+//    Legalities getLegalities() {
+//        return legalities;
+//    }
+//
+//    public
+//    void setLegalities(Legalities legalities) {
+//        this.legalities = legalities;
+//    }
 
 
     public

@@ -13,6 +13,7 @@ import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
 import com.rezatron.mtgprice.entity.wizards.Images;
 import com.rezatron.mtgprice.repository.CardFaceRepository;
 import com.rezatron.mtgprice.repository.CardRepository;
+import com.rezatron.mtgprice.repository.OracleCardRepository;
 import com.rezatron.mtgprice.repository.PriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ class CardService {
 
     @Autowired
     CardFaceRepository cardFaceRepository;
+
+
 
     @Autowired
     private PriceRepository priceRepository;
@@ -97,8 +100,8 @@ class CardService {
                                              .premodern( LegalStatus.getFromLabel( tempLegalities.getPremodern() ) )
                                              .standard( LegalStatus.getFromLabel( tempLegalities.getStandard() ) )
                                              .vintage( LegalStatus.getFromLabel( tempLegalities.getVintage() ) )
-                                             .card( card ).build();
-        card.setLegalities( newLegalities );
+                                             .build();
+//        card.setLegalities( newLegalities );
         if (scryfallCard.getColors() != null) {
             card.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
                                         .collect( Collectors.toSet() ) );
@@ -169,7 +172,7 @@ class CardService {
     @Transactional
     public
     List<Card> saveAll(List<Card> cardsToSave) {
-        return cardRepository.saveAllAndFlush( cardsToSave );
+        return cardRepository.saveAll( cardsToSave );
     }
 
     @Transactional
@@ -187,20 +190,20 @@ class CardService {
         return null;
     }
 
-    public
-    List<String> getSuperTypes() {
-        List<String> typeLines = cardRepository.findDistinctTypeLines().stream().filter( t -> t != null )
-                                               .collect( Collectors.toList() );
-        Set<String> superTypes = new HashSet<>();
-        for (String typeLine : typeLines) {
-            String[] split = typeLine.split( "//" );
-            for (String splitTypeLine : split) {
-                String[] superType = splitTypeLine.split( " — " );
-                superTypes.add( superType[0].trim() );
-            }
-        }
-        return superTypes.stream().sorted().collect( Collectors.toList() );
-    }
+//    public
+//    List<String> getSuperTypes() {
+//        List<String> typeLines = cardRepository.findDistinctTypeLines().stream().filter( t -> t != null )
+//                                               .collect( Collectors.toList() );
+//        Set<String> superTypes = new HashSet<>();
+//        for (String typeLine : typeLines) {
+//            String[] split = typeLine.split( "//" );
+//            for (String splitTypeLine : split) {
+//                String[] superType = splitTypeLine.split( " — " );
+//                superTypes.add( superType[0].trim() );
+//            }
+//        }
+//        return superTypes.stream().sorted().collect( Collectors.toList() );
+//    }
 
     public
     Card save(Card tempCard) {
