@@ -15,7 +15,7 @@ class ScryfallScheduler {
     @Autowired
     ScryfallController scryfallController;
 
-    @Scheduled( cron = "* * * * * *" )
+    @Scheduled( cron = "0 0 * * * *" )
     @SchedulerLock( name = "ScryfallScheduler_bulkDataUpdate",
                     lockAtLeastForString = "PT5M",
                     lockAtMostForString = "PT59M" )
@@ -23,6 +23,18 @@ class ScryfallScheduler {
     void bulkDataUpdate() {
         log.info( "Running schedule to get bulk data." );
         scryfallController.bulkDataUpdate( null );
+        log.info( "scheduled task done." );
+    }
+
+
+    @Scheduled( cron = "0 15 1,13 * * *" )
+    @SchedulerLock( name = "ScryfallScheduler_reloadFromBackUp",
+                    lockAtLeastForString = "PT5M",
+                    lockAtMostForString = "PT59M" )
+    public
+    void reloadFromBackUp() {
+        log.info( "Running schedule reloadFromBackUp." );
+        scryfallController.reloadFromBackUp(  );
         log.info( "scheduled task done." );
     }
 }

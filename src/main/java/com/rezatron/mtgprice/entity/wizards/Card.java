@@ -5,6 +5,7 @@ import com.rezatron.mtgprice.dto.magic.wizards.CardType;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
 import com.rezatron.mtgprice.entity.Inventory;
+import com.rezatron.mtgprice.entity.Legalities;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -106,6 +107,20 @@ class Card implements Comparable<Card> {
     private LocalDateTime createDateTime;
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
+
+    @OneToOne( mappedBy = "card",cascade = CascadeType.ALL,
+               orphanRemoval = true )
+    private Legalities legalities;
+
+    public
+    Legalities getLegalities() {
+        return legalities;
+    }
+
+    public
+    void setLegalities(Legalities legalities) {
+        this.legalities = legalities;
+    }
 
 
     public
