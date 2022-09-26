@@ -1,10 +1,12 @@
 package com.rezatron.mtgprice.service;
 
+import com.rezatron.mtgprice.dto.LegalStatus;
 import com.rezatron.mtgprice.dto.magic.scryfall.ImageUris;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCardFace;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
+import com.rezatron.mtgprice.entity.Legalities;
 import com.rezatron.mtgprice.entity.wizards.Card;
 import com.rezatron.mtgprice.entity.wizards.CardFace;
 import com.rezatron.mtgprice.entity.wizards.CardFaceImages;
@@ -58,10 +60,10 @@ class CardService {
 
 
     public
-    Card updateCard(ScryfallCard scryfallCard, Optional<LocalDateTime> optionalTimestamp)
+    Card updateCard(ScryfallCard scryfallCard, Optional<LocalDateTime> optionalTimestamp, Optional<Card> optionalCard)
     {
         LocalDateTime timestamp = optionalTimestamp.orElse( LocalDateTime.now() );
-        Card card = new Card();
+        Card card = optionalCard.orElse( new Card() );
         card.setId( scryfallCard.getId() );
         card.setName( scryfallCard.getName() );
         card.setMtgSet( scryfallCard.getSet() );
@@ -74,6 +76,29 @@ class CardService {
         card.setLanguage( scryfallCard.getLanguage() );
         card.setOracleId( scryfallCard.getOracleId() );
         card.setOracleText( scryfallCard.getOracleText() );
+        card.setLanguage( scryfallCard.getLanguage() );
+        com.rezatron.mtgprice.dto.magic.scryfall.Legalities tempLegalities = scryfallCard.getLegalities();
+        Legalities newLegalities = Legalities.builder().brawl( LegalStatus.getFromLabel( tempLegalities.getBrawl() ) )
+                                             .alchemy( LegalStatus.getFromLabel( tempLegalities.getAlchemy() ) )
+                                             .commander( LegalStatus.getFromLabel( tempLegalities.getCommander() ) )
+                                             .duel( LegalStatus.getFromLabel( tempLegalities.getDuel() ) )
+                                             .explorer( LegalStatus.getFromLabel( tempLegalities.getExplorer() ) )
+                                             .future( LegalStatus.getFromLabel( tempLegalities.getFuture() ) )
+                                             .gladiator( LegalStatus.getFromLabel( tempLegalities.getGladiator() ) )
+                                             .historic( LegalStatus.getFromLabel( tempLegalities.getHistoric() ) )
+                                             .historicbrawl( LegalStatus.getFromLabel( tempLegalities.getHistoricbrawl() ) )
+                                             .legacy( LegalStatus.getFromLabel( tempLegalities.getLegacy() ) )
+                                             .modern( LegalStatus.getFromLabel( tempLegalities.getModern() ) )
+                                             .oldschool( LegalStatus.getFromLabel( tempLegalities.getOldschool() ) )
+                                             .pauper( LegalStatus.getFromLabel( tempLegalities.getPauper() ) )
+                                             .paupercommander( LegalStatus.getFromLabel( tempLegalities.getPaupercommander() ) )
+                                             .penny( LegalStatus.getFromLabel( tempLegalities.getPenny() ) )
+                                             .pioneer( LegalStatus.getFromLabel( tempLegalities.getPioneer() ) )
+                                             .premodern( LegalStatus.getFromLabel( tempLegalities.getPremodern() ) )
+                                             .standard( LegalStatus.getFromLabel( tempLegalities.getStandard() ) )
+                                             .vintage( LegalStatus.getFromLabel( tempLegalities.getVintage() ) )
+                                             .card( card ).build();
+        card.setLegalities( newLegalities );
         if (scryfallCard.getColors() != null) {
             card.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
                                         .collect( Collectors.toSet() ) );

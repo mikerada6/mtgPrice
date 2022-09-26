@@ -207,10 +207,17 @@ class ScryfallService {
                                .eurFoil( scryfallCard.getPrices().getEurFoil() )
                                .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp )
                                .card( dataBaseCards.get( scryfallCard.getId() ) ).build();
+                if (dataBaseCards.get( scryfallCard.getId() ).getUpdateDateTime().isBefore( timeStamp )) {
+                    Card tempCard = cardService.updateCard( scryfallCard,
+                                                            Optional.of( timeStamp ),
+                                                            Optional.of( dataBaseCards.get( scryfallCard.getId() ) ) );
+                    cardsToSave.add( tempCard );
+                }
                 pricesToSave.add( p );
             } else {
                 Card tempCard = cardService.updateCard( scryfallCard,
-                                                        Optional.of( timeStamp ) );
+                                                        Optional.of( timeStamp ),
+                                                        Optional.ofNullable(null)  );
                 Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
                                .usdFoil( scryfallCard.getPrices().getUsdFoil() )
                                .usdEtched( scryfallCard.getPrices().getUsdEtched() )
@@ -246,17 +253,6 @@ class ScryfallService {
     }
 
 
-    public
-    Card saveCard(ScryfallCard scryfallCard) {
-
-        String dateTime = scryfallCard.getTimeStamp();
-        LocalDateTime timeStamp = LocalDateTime.parse( dateTime,
-                                                       cardDateFormat );
-
-        Card tempCard = cardService.updateCard( scryfallCard,
-                                                Optional.of( timeStamp ) );
-        return cardService.save( tempCard );
-    }
 
     @Transactional
     public
