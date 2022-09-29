@@ -61,26 +61,12 @@ class CardFace {
     @Enumerated( EnumType.STRING )
     private Set<CardType> cardTypes;
 
-    @ManyToOne( optional = false,
-                fetch = FetchType.LAZY )
-    @JoinColumn( name = "card_id",
-                 nullable = false )
-    private Card card;
 
     @OneToOne( fetch = FetchType.LAZY,
                cascade = {CascadeType.ALL} )
     @JoinColumn( name = "images_id" )
     private CardFaceImages images;
 
-    public
-    Card getCard() {
-        return card;
-    }
-
-    public
-    void setCard(Card card) {
-        this.card = card;
-    }
 
     @PrePersist
     protected

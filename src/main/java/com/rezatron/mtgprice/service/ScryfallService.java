@@ -11,12 +11,13 @@ import com.rezatron.mtgprice.dto.magic.scryfall.BulkDataInformation;
 import com.rezatron.mtgprice.dto.magic.scryfall.Datum;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
+import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
 import com.rezatron.mtgprice.entity.Legalities;
-import com.rezatron.mtgprice.entity.wizards.OracleCard;
+import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.Printing;
 import com.rezatron.mtgprice.exception.ScryFallException;
 import com.rezatron.mtgprice.queue.QueueSender;
-import com.rezatron.mtgprice.repository.OracleCardRepository;
-import com.rezatron.mtgprice.repository.PriceRepository;
+import com.rezatron.mtgprice.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ class ScryfallService {
     @Autowired
     QueueSender queueSender;
     @Autowired
-    OracleCardRepository oracleCardRepository;
+    CardRepository cardRepository;
     @Value( "${mtg.download.baselocation}" )
     private String baseFileLocation;
     @Value( "${mtg.bulkData.type}" )
@@ -59,8 +61,6 @@ class ScryfallService {
     private Integer batchSize;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private PriceRepository priceRepository;
 
     public
     ScryfallCard getCardFromJSON(String json)
@@ -186,18 +186,16 @@ class ScryfallService {
     public
     long saveCards(List<ScryfallCard> scryfallCards) {
         for (ScryfallCard scryfallCard : scryfallCards) {
-            OracleCard oracleCard = OracleCard.builder().id( scryfallCard.getOracleId() ).name( scryfallCard.getName() )
-                                              .oracleText( scryfallCard.getOracleText() )
-                                              .typeLine( scryfallCard.getTypeLine() ).cmc( scryfallCard.getCmc() )
-                                              .build();
+            Card card = Card.builder().id( scryfallCard.getOracleId() ).name( scryfallCard.getName() )
+                            .oracleText( scryfallCard.getOracleText() ).typeLine( scryfallCard.getTypeLine() )
+                            .cmc( scryfallCard.getCmc() ).build();
             if (scryfallCard.getColorIdentity() != null) {
-                oracleCard.setColorIdentity( scryfallCard.getColorIdentity().stream()
-                                                         .map( c -> Color.getFromLabel( c ) )
-                                                         .collect( Collectors.toSet() ) );
+                card.setColorIdentity( scryfallCard.getColorIdentity().stream().map( c -> Color.getFromLabel( c ) )
+                                                   .collect( Collectors.toSet() ) );
             }
             if (scryfallCard.getColors() != null) {
-                oracleCard.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
-                                                  .collect( Collectors.toSet() ) );
+                card.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
+                                            .collect( Collectors.toSet() ) );
             }
             com.rezatron.mtgprice.dto.magic.scryfall.Legalities tempLegalities = scryfallCard.getLegalities();
             Legalities newLegalities = Legalities.builder()
@@ -221,8 +219,14 @@ class ScryfallService {
                                                  .standard( LegalStatus.getFromLabel( tempLegalities.getStandard() ) )
                                                  .vintage( LegalStatus.getFromLabel( tempLegalities.getVintage() ) )
                                                  .id( scryfallCard.getId() + "_Legalities " ).build();
-            oracleCard.setLegalities( newLegalities );
-            oracleCardRepository.save( oracleCard );
+            card.setLegalities( newLegalities );
+            Printing p = Printing.builder().id( card.getId() + "_" + scryfallCard.getId() )
+                                 .collectorNumber( scryfallCard.getCollectorNumber() ).mtgSet( scryfallCard.getSet() )
+                                 .mtgSetName( scryfallCard.getSetName() )
+                                 .rarity( Rarity.fromShortName( scryfallCard.getRarity() ) )
+                                 .releasedAt( LocalDate.parse( scryfallCard.getReleasedAt() ) ).build();
+            card.addPrinting( p );
+            cardRepository.save( card );
         }
 
         return 0L;
@@ -317,7 +321,8 @@ class ScryfallService {
                      .collect( Collectors.toList() );
         int cardsSize = cards.size();
         log.info( "Getting prices already in database" );
-        List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
+//        List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
+        List<String> alreadyInDataBase = new ArrayList<String>();
         log.info( "{} prices in database looking to add {} new cards.",
                   alreadyInDataBase.size(),
                   cards.size() );

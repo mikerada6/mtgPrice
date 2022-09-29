@@ -1,7 +1,7 @@
 package com.rezatron.mtgprice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.Printing;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,12 +27,6 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "Price",
-        indexes = {@Index( name = "idx_price_timestamp",
-                           columnList = "timestamp" )},
-        uniqueConstraints = {@UniqueConstraint( name = "uc_price_timestamp_card_id",
-                                                columnNames = {"card_id", "timestamp"} )} )
-@ToString
 @EqualsAndHashCode( exclude = {"id"} )
 @Entity
 public
@@ -55,24 +49,14 @@ class Price {
     @Column( nullable = true )
     private Double usdFoil;
 
-    @NotNull
-    @ManyToOne( cascade = CascadeType.MERGE,
-                optional = false )
-    @JoinColumn( name = "card_id",
-                 nullable = false )
-    private Card card;
+//    @NotNull
+//    @ManyToOne( cascade = CascadeType.MERGE,
+//                optional = false )
+//    @JoinColumn( name = "card_id",
+//                 nullable = false )
+//    private Printing printing;
 
-    public
-    Card getCard() {
-        return card;
-    }
-
-    public
-    void setCard(Card card) {
-        this.card = card;
-    }
-
-    @PrePersist
+     @PrePersist
     protected
     void onCreate() {
         if (id == null) {

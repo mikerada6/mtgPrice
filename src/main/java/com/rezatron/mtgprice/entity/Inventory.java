@@ -3,7 +3,7 @@ package com.rezatron.mtgprice.entity;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.Printing;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,11 +40,11 @@ class Inventory {
     @JsonIgnore
     private String id;
 
-    @ManyToOne( cascade = CascadeType.ALL,
-                optional = false )
-    @JoinColumn( name = "card_id",
-                 nullable = false )
-    private Card card;
+//    @ManyToOne( cascade = CascadeType.ALL,
+//                optional = false )
+//    @JoinColumn( name = "card_id",
+//                 nullable = false )
+//    private Printing printing;
 
     @ManyToOne( cascade = CascadeType.ALL,
                 optional = false )
@@ -82,7 +82,7 @@ class Inventory {
     public
     String getCardId()
     {
-        return card.getId();
+        return "";
     }
 
 }

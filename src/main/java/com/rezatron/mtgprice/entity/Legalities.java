@@ -1,8 +1,6 @@
 package com.rezatron.mtgprice.entity;
 
 import com.rezatron.mtgprice.dto.LegalStatus;
-import com.rezatron.mtgprice.entity.wizards.Card;
-import com.rezatron.mtgprice.entity.wizards.OracleCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,16 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.util.UUID;
 
 @Data
 @Builder

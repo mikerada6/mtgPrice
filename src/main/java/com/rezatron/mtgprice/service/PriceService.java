@@ -1,7 +1,6 @@
 package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.entity.Price;
-import com.rezatron.mtgprice.repository.PriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,18 +12,7 @@ import java.util.List;
 @Slf4j
 public
 class PriceService {
-    @Autowired
-    PriceRepository priceRepository;
 
-    @Transactional
-    public
-    List<Price> saveAll(List<Price> pricesToSave) {
-        return priceRepository.saveAll( pricesToSave );
-    }
 
-    @Transactional
-    public
-    Price save(Price price) {
-        return priceRepository.save( price );
-    }
+
 }
