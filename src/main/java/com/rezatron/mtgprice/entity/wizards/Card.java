@@ -1,26 +1,28 @@
 package com.rezatron.mtgprice.entity.wizards;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.rezatron.mtgprice.dto.magic.wizards.CardType;
 import com.rezatron.mtgprice.dto.magic.wizards.Color;
 import com.rezatron.mtgprice.entity.Legalities;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import javax.persistence.PreUpdate;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 @Data
 @Builder
 @ToString()
 @Document( collection = "cards" )
 @Slf4j
+@JsonInclude( JsonInclude.Include.NON_NULL)
 public
 class Card {
     @Id
@@ -33,7 +35,7 @@ class Card {
     private Set<Color> colors;
     private Set<Color> colorIdentity;
     private Legalities legalities;
-    private List<Printing> printings;
+    private Set<Printing> printings;
 
     @PreUpdate
     public
@@ -43,10 +45,10 @@ class Card {
 
     public
     void addPrinting(Printing p) {
-        if(printings==null)
-        {
-            printings = new ArrayList<Printing>();
+        if (printings == null) {
+            printings = new HashSet<Printing>();
         }
-        printings.add(p);
+        printings.add( p );
     }
+
 }

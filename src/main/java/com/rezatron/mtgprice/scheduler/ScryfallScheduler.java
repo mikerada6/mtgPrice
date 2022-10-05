@@ -26,6 +26,15 @@ class ScryfallScheduler {
         log.info( "scheduled task done." );
     }
 
+    @Scheduled( cron = "* * * * * *" )
+    @SchedulerLock( name = "ScryfallScheduler_schedulerLockTest",
+                    lockAtLeastForString = "PT5M",
+                    lockAtMostForString = "PT59M" )
+    public
+    void schedulerLockTest() {
+        log.info( "schedulerLockTest." );
+    }
+
 
     @Scheduled( cron = "0 15 1,13 * * *" )
     @SchedulerLock( name = "ScryfallScheduler_reloadFromBackUp",

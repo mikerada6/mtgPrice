@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "Legality" )
+@Table( name = "legalities" )
 @ToString
 @EqualsAndHashCode()
 @Entity

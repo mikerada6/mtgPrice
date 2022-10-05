@@ -1,5 +1,12 @@
 package com.rezatron.mtgprice.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,8 +14,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 
-@Entity
-@Table( name = "shedlock" )
+@Data
+@Builder
+@ToString()
+@Document( collection = "shedlock" )
+@Slf4j
+@JsonInclude( JsonInclude.Include.NON_NULL)
 public
 class Shedlock {
     @Id

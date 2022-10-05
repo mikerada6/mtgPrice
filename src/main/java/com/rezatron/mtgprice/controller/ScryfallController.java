@@ -32,7 +32,7 @@ class ScryfallController {
     CardService cardService;
 
 
-    @PostMapping( "/api/v1/reloadFromBackUp" )
+    @PostMapping( "/reloadFromBackUp" )
     public
     ResponseEntity reloadFromBackUp()
     {
@@ -51,7 +51,7 @@ class ScryfallController {
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
-    @PostMapping( "/api/v1/bulkDataUpdate" )
+    @PostMapping( "/bulkDataUpdate" )
     public
     ResponseEntity bulkDataUpdate(
             @RequestParam( name = "fileLocation",

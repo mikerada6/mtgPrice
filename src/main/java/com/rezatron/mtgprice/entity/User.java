@@ -41,7 +41,6 @@ class User {
     private String id;
     private String userName;
     private String firstName;
-    @ApiModelProperty( readOnly = true )
     private String lastName;
     @CreationTimestamp
     private LocalDateTime createDateTime;
