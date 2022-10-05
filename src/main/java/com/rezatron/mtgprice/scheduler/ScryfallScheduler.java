@@ -43,7 +43,7 @@ class ScryfallScheduler {
     public
     void reloadFromBackUp() {
         log.info( "Running schedule reloadFromBackUp." );
-        scryfallController.reloadFromBackUp(  );
+        scryfallController.reloadFromBackUp();
         log.info( "scheduled task done." );
     }
 }

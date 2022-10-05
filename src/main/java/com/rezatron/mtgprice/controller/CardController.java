@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping( "/api/v1/cards" )
 @Slf4j
@@ -24,12 +22,12 @@ class CardController {
 
     @GetMapping( "cardId/{cardId}" )
     public
-    ResponseEntity getCard(@PathVariable( "cardId" )
-                                 String cardId)
+    ResponseEntity getCard(
+            @PathVariable( "cardId" )
+            String cardId)
     {
         Card card = cardService.findById( cardId );
-        if(card== null)
-        {
+        if (card == null) {
             return ResponseEntity.status( HttpStatus.NO_CONTENT ).body( "Could not find a card with id of " + cardId );
         }
         return ResponseEntity.status( HttpStatus.OK ).body( card );
@@ -37,17 +35,18 @@ class CardController {
 
     @GetMapping( "cardId/{cardId}/printing/{printingId}" )
     public
-    ResponseEntity getPrinting(@PathVariable( "cardId" )
-                               String cardId,@PathVariable( "printingId" )
-                                 String printingId)
+    ResponseEntity getPrinting(
+            @PathVariable( "cardId" )
+            String cardId,
+            @PathVariable( "printingId" )
+            String printingId)
     {
-        Card card = cardService.findByPrintingId(cardId, printingId );
-        if(card== null)
-        {
-            return ResponseEntity.status( HttpStatus.NO_CONTENT ).body( "Could not find a card with id of " + printingId );
+        Card card = cardService.findByPrintingId( cardId,
+                                                  printingId );
+        if (card == null) {
+            return ResponseEntity.status( HttpStatus.NO_CONTENT )
+                                 .body( "Could not find a card with id of " + printingId );
         }
         return ResponseEntity.status( HttpStatus.OK ).body( card );
     }
-
-
 }

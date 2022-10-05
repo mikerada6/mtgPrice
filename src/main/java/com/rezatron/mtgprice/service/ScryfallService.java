@@ -198,8 +198,8 @@ class ScryfallService {
         Map<String, ScryfallCard> cardMap = scryfallCards.stream().collect( Collectors.toMap( ScryfallCard::getOracleId,
                                                                                               Function.identity(),
                                                                                               (card1, card2) -> {
-            return card1;
-        } ) );
+                                                                                                  return card1;
+                                                                                              } ) );
         long savedCards = 0L;
         long savedPrintings = 0L;
         long savedPrices = 0L;
@@ -211,14 +211,11 @@ class ScryfallService {
                       cardIdsMissing.size() );
             for (String id : cardIdsMissing) {
                 Card card = createCardFromScryfallCard( cardMap.get( id ) );
-                if(card.getId()==null)
-                {
-                    if(cardMap.get( id ).getCardFaces().size()>0)
-                    {
-                        card.setId(cardMap.get( id ).getCardFaces().get(0).getOracleId());
-                    }
-                    else{
-                        log.error("Could not come up with an id for a card.");
+                if (card.getId() == null) {
+                    if (cardMap.get( id ).getCardFaces().size() > 0) {
+                        card.setId( cardMap.get( id ).getCardFaces().get( 0 ).getOracleId() );
+                    } else {
+                        log.error( "Could not come up with an id for a card." );
                     }
                 }
                 cardRepository.save( card );
@@ -229,8 +226,7 @@ class ScryfallService {
         }
 
         log.info( "Starting to save missing printings." );
-        List<String> printingIds = scryfallCards.stream().map( c -> c.getPrintingId() )
-                                                .collect( Collectors.toList() );
+        List<String> printingIds = scryfallCards.stream().map( c -> c.getPrintingId() ).collect( Collectors.toList() );
         List<String> printingIdsMissing = cardRepository.findPrintingIdsNotInDatabase( printingIds );
         if (printingIdsMissing.size() > 0) {
             log.info( "{} printings are missing from the database Savings those first.",
@@ -370,13 +366,12 @@ class ScryfallService {
     private
     Printing createPrintingFromScryfallCard(ScryfallCard scryfallCard)
     {
-        return Printing.builder().id( scryfallCard.getPrintingId() )
-                                    .mtgSet( scryfallCard.getSet() ).mtgSetName( scryfallCard.getSetName() )
-                                    .releasedAt( LocalDate.from( LocalDate.parse( scryfallCard.getReleasedAt(),
-                                                                                  releaseDate ) ) )
-                                    .collectorNumber( scryfallCard.getCollectorNumber() )
-                                    .scryfallId( scryfallCard.getId() )
-                                    .rarity( Rarity.fromShortName( scryfallCard.getRarity() ) ).build();
+        return Printing.builder().id( scryfallCard.getPrintingId() ).mtgSet( scryfallCard.getSet() )
+                       .mtgSetName( scryfallCard.getSetName() )
+                       .releasedAt( LocalDate.from( LocalDate.parse( scryfallCard.getReleasedAt(),
+                                                                     releaseDate ) ) )
+                       .collectorNumber( scryfallCard.getCollectorNumber() ).scryfallId( scryfallCard.getId() )
+                       .rarity( Rarity.fromShortName( scryfallCard.getRarity() ) ).build();
     }
 
     private

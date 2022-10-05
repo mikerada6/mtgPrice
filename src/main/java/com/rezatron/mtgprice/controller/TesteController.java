@@ -36,9 +36,9 @@ class TesteController {
     public
     String testingMongo() {
         List<String> ids = new ArrayList<>( Arrays.asList( "dc4e2134-f0c2-49aa-9ea3-ebf83af1445c",
-                                                                "badid",
-                                                                "3a21a6ae-b2f2-4f0c-acfd-5f3e8d63fd2f" ) );
-        List<String> missingIds = cardService.findIdsNotInDatabase(ids);
+                                                           "badid",
+                                                           "3a21a6ae-b2f2-4f0c-acfd-5f3e8d63fd2f" ) );
+        List<String> missingIds = cardService.findIdsNotInDatabase( ids );
         queueSender.send( "test message" );
         return "ok. done";
     }

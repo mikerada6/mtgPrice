@@ -1,6 +1,5 @@
 package com.rezatron.mtgprice.repository;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.rezatron.mtgprice.dto.PriceUpdate;
@@ -15,7 +14,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +40,7 @@ class CustomCardRepositoryImpl implements CustomCardRepository {
 
     @Override
     public
-    boolean  addPricesToCard(List<PriceUpdate> priceUpdateList) {
+    boolean addPricesToCard(List<PriceUpdate> priceUpdateList) {
         BulkOperations ops = mongoTemplate.bulkOps( BulkOperations.BulkMode.UNORDERED,
                                                     Card.class );
         for (PriceUpdate p : priceUpdateList) {
@@ -104,25 +102,27 @@ class CustomCardRepositoryImpl implements CustomCardRepository {
     public
     List<String> findIdsNotInDatabase(List<String> ids) {
         Query query = new Query( Criteria.where( "_id" ).in( ids ) );
-        query.fields().include("_id");
-        List<Card> list = mongoTemplate.find(query, Card.class);
+        query.fields().include( "_id" );
+        List<Card> list = mongoTemplate.find( query,
+                                              Card.class );
         List<String> idsInDataBase = mongoTemplate.find( query,
                                                          Card.class ).stream().map( c -> c.getId() )
                                                   .collect( Collectors.toList() );
-        return ids.stream().filter(id -> !idsInDataBase.contains( id )).collect( Collectors.toList());
+        return ids.stream().filter( id -> !idsInDataBase.contains( id ) ).collect( Collectors.toList() );
     }
 
     @Override
     public
     List<String> findPrintingIdsNotInDatabase(List<String> ids) {
         Query query = new Query( Criteria.where( "printings._id" ).in( ids ) );
-        query.fields().include("printings._id");
-        List<Card> list = mongoTemplate.find(query, Card.class);
+        query.fields().include( "printings._id" );
+        List<Card> list = mongoTemplate.find( query,
+                                              Card.class );
         List<String> idsInDataBase = mongoTemplate.find( query,
                                                          Card.class ).stream()
                                                   .flatMap( c -> c.getPrintings().stream().map( p -> p.getId() ) )
                                                   .collect( Collectors.toList() );
-        return ids.stream().filter(id -> !idsInDataBase.contains( id )).collect( Collectors.toList());
+        return ids.stream().filter( id -> !idsInDataBase.contains( id ) ).collect( Collectors.toList() );
     }
 
 

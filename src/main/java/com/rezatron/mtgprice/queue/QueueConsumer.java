@@ -47,7 +47,7 @@ class QueueConsumer {
             for (ScryfallCard cardsToSend : cardArray) {
                 String jsonInString = null;
                 try {
-                    jsonInString = mapper.writeValueAsString( Arrays.asList(cardsToSend) );
+                    jsonInString = mapper.writeValueAsString( Arrays.asList( cardsToSend ) );
                 } catch (JsonProcessingException ex) {
                     log.error( "JsonProcessingException when trying to resend message?" );
                     log.error( e.toString() );

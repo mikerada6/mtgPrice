@@ -204,7 +204,7 @@ class ScryfallCard implements Serializable {
                 return cardFaces.get( 0 ).getOracleId() + "_" + id;
             }
         }
-        log.error("Could not create an id for the printing {}" + this);
+        log.error( "Could not create an id for the printing {}" + this );
         return null;
     }
 

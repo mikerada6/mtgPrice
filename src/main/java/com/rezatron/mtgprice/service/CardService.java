@@ -35,9 +35,8 @@ class CardService {
     Card findByPrintingId(String cardId, String printingId) {
         log.info( "findByPrintingId {}.",
                   printingId );
-        Card card = findById(cardId);
-        if (card==null)
-            return null;
+        Card card = findById( cardId );
+        if (card == null) return null;
         Object temp = printingRepository.findByPrintingId( printingId );
         return null;
     }
@@ -54,6 +53,6 @@ class CardService {
     @Transactional( readOnly = true )
     public
     List<String> findIdsNotInDatabase(List<String> ids) {
-        return cardRepository.findIdsNotInDatabase(ids);
+        return cardRepository.findIdsNotInDatabase( ids );
     }
 }
