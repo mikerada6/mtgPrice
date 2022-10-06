@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Slf4j
 @EqualsAndHashCode()
 public
 class ScryfallCard implements Serializable {
@@ -189,5 +191,21 @@ class ScryfallCard implements Serializable {
                      alternate = {"cardFaces"} )
     private List<ScryfallCardFace> cardFaces;
     private String timeStamp;
+    private int retryCount;
+
+    public
+    String getPrintingId()
+    {
+        if (oracleId != null) {
+            return oracleId + "_" + id;
+        }
+        if (oracleId == null) {
+            if (cardFaces.size() > 0 && cardFaces.get( 0 ).getOracleId() != null) {
+                return cardFaces.get( 0 ).getOracleId() + "_" + id;
+            }
+        }
+        log.error( "Could not create an id for the printing {}" + this );
+        return null;
+    }
 
 }

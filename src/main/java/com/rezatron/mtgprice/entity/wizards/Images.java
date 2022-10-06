@@ -8,23 +8,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import java.util.UUID;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "Images" )
+//@Table( name = "Images" )
 @ToString( exclude = {"card"} )
 @EqualsAndHashCode( exclude = {"card"} )
-@Entity
+//@Entity
 @JsonPropertyOrder( alphabetic = true )
 public
 class Images {
@@ -38,26 +31,5 @@ class Images {
     private String png;
     private String small;
 
-    @OneToOne( mappedBy = "images" )
-    private Card card;
 
-    public
-    Card getCard() {
-        return card;
-    }
-
-    public
-    void setCard(Card card) {
-        this.card = card;
-    }
-
-
-    @PrePersist
-    @PreUpdate
-    protected
-    void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID().toString();
-        }
-    }
 }

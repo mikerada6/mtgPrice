@@ -5,32 +5,42 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.rezatron.mtgprice.dto.LegalStatus;
+import com.rezatron.mtgprice.dto.PriceUpdate;
 import com.rezatron.mtgprice.dto.magic.scryfall.BulkData;
 import com.rezatron.mtgprice.dto.magic.scryfall.BulkDataInformation;
 import com.rezatron.mtgprice.dto.magic.scryfall.Datum;
 import com.rezatron.mtgprice.dto.magic.scryfall.ScryfallCard;
+import com.rezatron.mtgprice.dto.magic.wizards.CardType;
+import com.rezatron.mtgprice.dto.magic.wizards.Color;
+import com.rezatron.mtgprice.dto.magic.wizards.Rarity;
+import com.rezatron.mtgprice.entity.Legalities;
 import com.rezatron.mtgprice.entity.Price;
 import com.rezatron.mtgprice.entity.wizards.Card;
+import com.rezatron.mtgprice.entity.wizards.Printing;
 import com.rezatron.mtgprice.exception.ScryFallException;
 import com.rezatron.mtgprice.queue.QueueSender;
-import com.rezatron.mtgprice.repository.PriceRepository;
+import com.rezatron.mtgprice.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,6 +51,7 @@ class ScryfallService {
 
     private final DateTimeFormatter fileDateFormat = DateTimeFormatter.ofPattern( "yyyy-MM-dd'T'HH-mm-ss" );
     private final DateTimeFormatter cardDateFormat = DateTimeFormatter.ofPattern( "yyyy-MM-dd'T'HH:mm:ss" );
+    private final DateTimeFormatter releaseDate = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
 
 
     @Autowired
@@ -49,6 +60,8 @@ class ScryfallService {
     PriceService priceService;
     @Autowired
     QueueSender queueSender;
+    @Autowired
+    CardRepository cardRepository;
     @Value( "${mtg.download.baselocation}" )
     private String baseFileLocation;
     @Value( "${mtg.bulkData.type}" )
@@ -57,8 +70,7 @@ class ScryfallService {
     private Integer batchSize;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private PriceRepository priceRepository;
+
 
     public
     ScryfallCard getCardFromJSON(String json)
@@ -180,79 +192,250 @@ class ScryfallService {
 
     }
 
+
     @Transactional
     public
     long saveCards(List<ScryfallCard> scryfallCards) {
-
-        log.info( "Saving {} cards.",
+        log.info( "Savings {} cards.",
                   scryfallCards.size() );
-
-        Map<String, Card> dataBaseCards = cardService
-                .findByIdIn( scryfallCards.stream().map( c -> c.getId() ).collect( Collectors.toList() ) ).stream()
-                .collect( Collectors.toMap( Card::getId,
-                                            Function.identity() ) );
+        Map<String, ScryfallCard> cardMap = scryfallCards.stream().collect( Collectors.toMap( ScryfallCard::getOracleId,
+                                                                                              Function.identity(),
+                                                                                              (card1, card2) -> {
+                                                                                                  return card1;
+                                                                                              } ) );
+        long savedCards = 0L;
+        long savedPrintings = 0L;
+        long savedPrices = 0L;
+        log.info( "Starting to save missing cards." );
         List<Card> cardsToSave = new ArrayList<>();
-        List<Price> pricesToSave = new ArrayList<>();
-        long savedCards = 0;
-        long savedPrices = 0;
+        List<String> cardIds = scryfallCards.stream().map( c -> c.getOracleId() ).collect( Collectors.toList() );
+        List<String> cardIdsMissing = cardRepository.findIdsNotInDatabase( cardIds );
+        if (cardIdsMissing.size() > 0) {
+            log.info( "{} cards are missing from the database Savings those first.",
+                      cardIdsMissing.size() );
+            for (String id : cardIdsMissing) {
+                Card card = createCardFromScryfallCard( cardMap.get( id ) );
+                if (card.getId() == null) {
+                    if (cardMap.get( id ).getCardFaces().size() > 0) {
+                        card.setId( cardMap.get( id ).getCardFaces().get( 0 ).getOracleId() );
+                    } else {
+                        log.error( "Could not come up with an id for a card." );
+                    }
+                }
+                cardsToSave.add( card );
+                if (cardsToSave.size() >= batchSize) {
+                    log.info( "savings {} cards.",
+                              cardsToSave.size() );
+                    cardRepository.saveAll( cardsToSave );
+                    savedCards += cardsToSave.size();
+
+                    cardsToSave.clear();
+                }
+            }
+            if (cardsToSave.size() > 0) {
+                log.info( "savings {} cards.",
+                          cardsToSave.size() );
+                cardRepository.saveAll( cardsToSave );
+                savedCards += cardsToSave.size();
+
+                cardsToSave.clear();
+            }
+        } else {
+            log.info( "No new cards to save." );
+        }
+
+        log.info( "Starting to save missing printings." );
+        List<String> printingIds = scryfallCards.stream().map( c -> c.getPrintingId() ).collect( Collectors.toList() );
+        List<String> printingIdsMissing = cardRepository.findPrintingIdsNotInDatabase( printingIds );
+        if (printingIdsMissing.size() > 0) {
+            log.info( "{} printings are missing from the database Savings those first.",
+                      printingIdsMissing.size() );
+            for (String id : printingIdsMissing) {
+                String cardId = id.split( "_" )[0];
+                String printingId = id.split( "_" )[1];
+                ScryfallCard tempCard = cardMap.get( cardId );
+                Card card = cardRepository.findById( cardId ).get();
+                card.addPrinting( createPrintingFromScryfallCard( tempCard ) );
+                cardRepository.save( card );
+                savedPrintings++;
+            }
+        } else {
+            log.info( "No new printings to save." );
+        }
+
+
+        List<PriceUpdate> priceUpdatesToSave = new ArrayList<>();
+        log.info( "Starting to save prices." );
+        LocalDateTime.now( ZoneOffset.UTC );
         for (ScryfallCard scryfallCard : scryfallCards) {
             String dateTime = scryfallCard.getTimeStamp();
-            LocalDateTime timeStamp = LocalDateTime.parse( dateTime,
-                                                           cardDateFormat );
-            if (dataBaseCards.containsKey( scryfallCard.getId() )) {
-                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
+            DateTime timeStamp = ISODateTimeFormat.dateTimeParser().parseDateTime( dateTime + 'Z' );
+            String cardId = scryfallCard.getOracleId();
+            String printingId = cardId + "_" + scryfallCard.getId();
+            String priceId = printingId + "_" + timeStamp;
+            Price price = Price.builder().id( priceId ).usd( scryfallCard.getPrices().getUsd() )
                                .usdFoil( scryfallCard.getPrices().getUsdFoil() )
                                .usdEtched( scryfallCard.getPrices().getUsdEtched() )
                                .eur( scryfallCard.getPrices().getEur() )
                                .eurFoil( scryfallCard.getPrices().getEurFoil() )
-                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp )
-                               .card( dataBaseCards.get( scryfallCard.getId() ) ).build();
-                if (dataBaseCards.get( scryfallCard.getId() ).getUpdateDateTime().isBefore( timeStamp )) {
-                    Card tempCard = cardService.updateCard( scryfallCard,
-                                                            Optional.of( timeStamp ),
-                                                            Optional.of( dataBaseCards.get( scryfallCard.getId() ) ) );
-                    cardsToSave.add( tempCard );
+                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp ).build();
+            if (price.worthSaving()) {
+                priceUpdatesToSave.add( PriceUpdate.builder().cardId( cardId ).printingId( printingId ).price( price )
+                                                   .build() );
+                if (priceUpdatesToSave.size() >= batchSize) {
+                    log.info( "savings {} prices.",
+                              priceUpdatesToSave.size() );
+                    boolean saved = cardRepository.addPricesToCard( priceUpdatesToSave );
+                    if (saved) {
+                        savedPrices += priceUpdatesToSave.size();
+                    } else {
+                        log.error( "We had an error saving {} prices.",
+                                   priceUpdatesToSave.size() );
+                    }
+                    priceUpdatesToSave.clear();
                 }
-                pricesToSave.add( p );
-            } else {
-                Card tempCard = cardService.updateCard( scryfallCard,
-                                                        Optional.of( timeStamp ),
-                                                        Optional.ofNullable(null)  );
-                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
-                               .usdFoil( scryfallCard.getPrices().getUsdFoil() )
-                               .usdEtched( scryfallCard.getPrices().getUsdEtched() )
-                               .eur( scryfallCard.getPrices().getEur() )
-                               .eurFoil( scryfallCard.getPrices().getEurFoil() )
-                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp ).card( tempCard )
-                               .build();
-                cardsToSave.add( tempCard );
-                pricesToSave.add( p );
-            }
-
-
-            if (pricesToSave.size() >= batchSize) {
-                log.info( "Saving {} prices and {} cards.",
-                          pricesToSave.size(),
-                          cardsToSave.size() );
-                savedCards += cardService.saveAll( cardsToSave ).size();
-                savedPrices += priceService.saveAll( pricesToSave ).size();
-                cardsToSave.clear();
-                pricesToSave.clear();
-                log.info( "Done saving batch.  Still have {} left to save.",
-                          scryfallCards.size() - savedPrices );
-
             }
         }
-        savedCards += cardService.saveAll( cardsToSave ).size();
-        savedPrices += priceService.saveAll( pricesToSave ).size();
-        log.info( "Saved a total of {} prices and {} cards.",
-                  savedPrices,
-                  savedCards );
-        return savedPrices;
-
+        if (priceUpdatesToSave.size() > 0) {
+            log.info( "savings final {} prices.",
+                      priceUpdatesToSave.size() );
+            cardRepository.addPricesToCard( priceUpdatesToSave );
+            savedPrices += priceUpdatesToSave.size();
+            priceUpdatesToSave.clear();
+        }
+        log.info( "Done savings {} cards {} printings {} prices.",
+                  savedCards,
+                  savedPrintings,
+                  savedPrices );
+        return savedCards;
     }
 
+//    @Transactional
+//    public
+//    long saveCards(List<ScryfallCard> scryfallCards) {
+//
+//        log.info( "Saving {} cards.",
+//                  scryfallCards.size() );
+//
+//        Map<String, Card> dataBaseCards = cardService
+//                .findByIdIn( scryfallCards.stream().map( c -> c.getId() ).collect( Collectors.toList() ) ).stream()
+//                .collect( Collectors.toMap( Card::getId,
+//                                            Function.identity() ) );
+//        List<Card> cardsToSave = new ArrayList<>();
+//        List<Price> pricesToSave = new ArrayList<>();
+//        long savedCards = 0;
+//        long savedPrices = 0;
+//        for (ScryfallCard scryfallCard : scryfallCards) {
+//            String dateTime = scryfallCard.getTimeStamp();
+//            LocalDateTime timeStamp = LocalDateTime.parse( dateTime,
+//                                                           cardDateFormat );
+//            if (dataBaseCards.containsKey( scryfallCard.getId() )) {
+//                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
+//                               .usdFoil( scryfallCard.getPrices().getUsdFoil() )
+//                               .usdEtched( scryfallCard.getPrices().getUsdEtched() )
+//                               .eur( scryfallCard.getPrices().getEur() )
+//                               .eurFoil( scryfallCard.getPrices().getEurFoil() )
+//                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp )
+//                               .card( dataBaseCards.get( scryfallCard.getId() ) ).build();
+//                if (dataBaseCards.get( scryfallCard.getId() ).getUpdateDateTime().isBefore( timeStamp )) {
+//                    Card tempCard = cardService.updateCard( scryfallCard,
+//                                                            Optional.of( timeStamp ),
+//                                                            Optional.of( dataBaseCards.get( scryfallCard.getId() ) ) );
+//                    cardsToSave.add( tempCard );
+//                }
+//                pricesToSave.add( p );
+//            } else {
+//                Card tempCard = cardService.updateCard( scryfallCard,
+//                                                        Optional.of( timeStamp ),
+//                                                        Optional.ofNullable(null)  );
+//                Price p = Price.builder().usd( scryfallCard.getPrices().getUsd() )
+//                               .usdFoil( scryfallCard.getPrices().getUsdFoil() )
+//                               .usdEtched( scryfallCard.getPrices().getUsdEtched() )
+//                               .eur( scryfallCard.getPrices().getEur() )
+//                               .eurFoil( scryfallCard.getPrices().getEurFoil() )
+//                               .tix( scryfallCard.getPrices().getTix() ).timestamp( timeStamp ).card( tempCard )
+//                               .build();
+//                cardsToSave.add( tempCard );
+//                pricesToSave.add( p );
+//            }
+//
+//
+//            if (pricesToSave.size() >= batchSize) {
+//                log.info( "Saving {} prices and {} cards.",
+//                          pricesToSave.size(),
+//                          cardsToSave.size() );
+//                savedCards += cardService.saveAll( cardsToSave ).size();
+//                savedPrices += priceService.saveAll( pricesToSave ).size();
+//                cardsToSave.clear();
+//                pricesToSave.clear();
+//                log.info( "Done saving batch.  Still have {} left to save.",
+//                          scryfallCards.size() - savedPrices );
+//
+//            }
+//        }
+//        savedCards += cardService.saveAll( cardsToSave ).size();
+//        savedPrices += priceService.saveAll( pricesToSave ).size();
+//        log.info( "Saved a total of {} prices and {} cards.",
+//                  savedPrices,
+//                  savedCards );
+//        return savedPrices;
+//
+//    }
 
+    private
+    Printing createPrintingFromScryfallCard(ScryfallCard scryfallCard)
+    {
+        return Printing.builder().id( scryfallCard.getPrintingId() ).mtgSet( scryfallCard.getSet() )
+                       .mtgSetName( scryfallCard.getSetName() )
+                       .releasedAt( LocalDate.from( LocalDate.parse( scryfallCard.getReleasedAt(),
+                                                                     releaseDate ) ) )
+                       .collectorNumber( scryfallCard.getCollectorNumber() ).scryfallId( scryfallCard.getId() )
+                       .rarity( Rarity.fromShortName( scryfallCard.getRarity() ) ).build();
+    }
+
+    private
+    Card createCardFromScryfallCard(ScryfallCard scryfallCard)
+    {
+        Card card = Card.builder().id( scryfallCard.getOracleId() ).name( scryfallCard.getName() )
+                        .oracleText( scryfallCard.getOracleText() ).typeLine( scryfallCard.getTypeLine() )
+                        .cmc( scryfallCard.getCmc() ).build();
+        if (scryfallCard.getColorIdentity() != null) {
+            card.setColorIdentity( scryfallCard.getColorIdentity().stream().map( c -> Color.getFromLabel( c ) )
+                                               .collect( Collectors.toSet() ) );
+        }
+        if (scryfallCard.getColors() != null) {
+            card.setColors( scryfallCard.getColors().stream().map( c -> Color.getFromLabel( c ) )
+                                        .collect( Collectors.toSet() ) );
+        }
+        com.rezatron.mtgprice.dto.magic.scryfall.Legalities tempLegalities = scryfallCard.getLegalities();
+        Legalities newLegalities = Legalities.builder().brawl( LegalStatus.getFromLabel( tempLegalities.getBrawl() ) )
+                                             .alchemy( LegalStatus.getFromLabel( tempLegalities.getAlchemy() ) )
+                                             .commander( LegalStatus.getFromLabel( tempLegalities.getCommander() ) )
+                                             .duel( LegalStatus.getFromLabel( tempLegalities.getDuel() ) )
+                                             .explorer( LegalStatus.getFromLabel( tempLegalities.getExplorer() ) )
+                                             .future( LegalStatus.getFromLabel( tempLegalities.getFuture() ) )
+                                             .gladiator( LegalStatus.getFromLabel( tempLegalities.getGladiator() ) )
+                                             .historic( LegalStatus.getFromLabel( tempLegalities.getHistoric() ) )
+                                             .historicbrawl( LegalStatus.getFromLabel( tempLegalities.getHistoricbrawl() ) )
+                                             .legacy( LegalStatus.getFromLabel( tempLegalities.getLegacy() ) )
+                                             .modern( LegalStatus.getFromLabel( tempLegalities.getModern() ) )
+                                             .oldschool( LegalStatus.getFromLabel( tempLegalities.getOldschool() ) )
+                                             .pauper( LegalStatus.getFromLabel( tempLegalities.getPauper() ) )
+                                             .paupercommander( LegalStatus.getFromLabel( tempLegalities.getPaupercommander() ) )
+                                             .penny( LegalStatus.getFromLabel( tempLegalities.getPenny() ) )
+                                             .pioneer( LegalStatus.getFromLabel( tempLegalities.getPioneer() ) )
+                                             .premodern( LegalStatus.getFromLabel( tempLegalities.getPremodern() ) )
+                                             .standard( LegalStatus.getFromLabel( tempLegalities.getStandard() ) )
+                                             .vintage( LegalStatus.getFromLabel( tempLegalities.getVintage() ) )
+                                             .id( scryfallCard.getId() + "_Legalities " ).build();
+        card.setLegalities( newLegalities );
+        card.setCardTypes( CardType.getCardTypeFromScryFallTypeLine( scryfallCard.getTypeLine() ).stream()
+                                   .collect( Collectors.toSet() ) );
+
+        card.addPrinting( createPrintingFromScryfallCard( scryfallCard ) );
+
+        return card;
+    }
 
     @Transactional
     public
@@ -270,7 +453,8 @@ class ScryfallService {
                      .collect( Collectors.toList() );
         int cardsSize = cards.size();
         log.info( "Getting prices already in database" );
-        List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
+//        List<String> alreadyInDataBase = priceRepository.findCardIdsByTimestamp( timeStamp );
+        List<String> alreadyInDataBase = new ArrayList<String>();
         log.info( "{} prices in database looking to add {} new cards.",
                   alreadyInDataBase.size(),
                   cards.size() );

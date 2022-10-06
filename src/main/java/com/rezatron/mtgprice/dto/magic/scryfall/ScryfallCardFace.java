@@ -48,6 +48,9 @@ class ScryfallCardFace implements Comparable<ScryfallCardFace> {
     @SerializedName( value = "type_line",
                      alternate = {"typeLine"} )
     private String typeLine;
+    @SerializedName( value = "oracle_id",
+                     alternate = {"oracleId"} )
+    private String oracleId;
 
     @Override
     public
