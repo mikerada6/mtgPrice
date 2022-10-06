@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,7 +222,7 @@ class ScryfallService {
                         log.error( "Could not come up with an id for a card." );
                     }
                 }
-                cardsToSave.add(card);
+                cardsToSave.add( card );
                 if (cardsToSave.size() >= batchSize) {
                     log.info( "savings {} cards.",
                               cardsToSave.size() );
@@ -267,10 +266,10 @@ class ScryfallService {
 
         List<PriceUpdate> priceUpdatesToSave = new ArrayList<>();
         log.info( "Starting to save prices." );
-        LocalDateTime.now( ZoneOffset.UTC);
+        LocalDateTime.now( ZoneOffset.UTC );
         for (ScryfallCard scryfallCard : scryfallCards) {
             String dateTime = scryfallCard.getTimeStamp();
-            DateTime timeStamp = ISODateTimeFormat.dateTimeParser().parseDateTime( dateTime+'Z');
+            DateTime timeStamp = ISODateTimeFormat.dateTimeParser().parseDateTime( dateTime + 'Z' );
             String cardId = scryfallCard.getOracleId();
             String printingId = cardId + "_" + scryfallCard.getId();
             String priceId = printingId + "_" + timeStamp;
