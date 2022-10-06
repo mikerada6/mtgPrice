@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -204,6 +208,7 @@ class ScryfallService {
         long savedPrintings = 0L;
         long savedPrices = 0L;
         log.info( "Starting to save missing cards." );
+        List<Card> cardsToSave = new ArrayList<>();
         List<String> cardIds = scryfallCards.stream().map( c -> c.getOracleId() ).collect( Collectors.toList() );
         List<String> cardIdsMissing = cardRepository.findIdsNotInDatabase( cardIds );
         if (cardIdsMissing.size() > 0) {
@@ -218,8 +223,23 @@ class ScryfallService {
                         log.error( "Could not come up with an id for a card." );
                     }
                 }
-                cardRepository.save( card );
-                savedCards++;
+                cardsToSave.add(card);
+                if (cardsToSave.size() >= batchSize) {
+                    log.info( "savings {} cards.",
+                              cardsToSave.size() );
+                    cardRepository.saveAll( cardsToSave );
+                    savedCards += cardsToSave.size();
+
+                    cardsToSave.clear();
+                }
+            }
+            if (cardsToSave.size() > 0) {
+                log.info( "savings {} cards.",
+                          cardsToSave.size() );
+                cardRepository.saveAll( cardsToSave );
+                savedCards += cardsToSave.size();
+
+                cardsToSave.clear();
             }
         } else {
             log.info( "No new cards to save." );
@@ -247,10 +267,10 @@ class ScryfallService {
 
         List<PriceUpdate> priceUpdatesToSave = new ArrayList<>();
         log.info( "Starting to save prices." );
+        LocalDateTime.now( ZoneOffset.UTC);
         for (ScryfallCard scryfallCard : scryfallCards) {
             String dateTime = scryfallCard.getTimeStamp();
-            LocalDateTime timeStamp = LocalDateTime.parse( dateTime,
-                                                           cardDateFormat );
+            DateTime timeStamp = ISODateTimeFormat.dateTimeParser().parseDateTime( dateTime+'Z');
             String cardId = scryfallCard.getOracleId();
             String printingId = cardId + "_" + scryfallCard.getId();
             String priceId = printingId + "_" + timeStamp;

@@ -5,10 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,7 +20,7 @@ class Price {
 
     @Id
     private String id;
-    private LocalDateTime timestamp;
+    private DateTime timestamp;
     private Double eur;
     private Double eurFoil;
     private Double tix;
