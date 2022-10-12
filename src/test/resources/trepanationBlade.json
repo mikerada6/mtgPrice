@@ -1,0 +1,67 @@
+{
+    "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2",
+    "oracleId" : "19f7a0f2-aa3f-4253-be44-b08056918a26",
+    "name" : "Cooperation",
+    "typeLine" : "Enchantment — Aura",
+    "oracleText" : "Enchant creature\nEnchanted creature has banding. (Any creatures with banding, and up to one without, can attack in a band. Bands are blocked as a group. If any creatures with banding a player controls are blocking or being blocked by a creature, that player divides that creature's combat damage, not its controller, among any of the creatures it's being blocked by or is blocking.)",
+    "cmc" : "3.0",
+    "cardTypes" : [
+        "ENCHANTMENT"
+    ],
+    "colors" : [
+        "WHITE"
+    ],
+    "colorIdentity" : [
+        "WHITE"
+    ],
+    "legalities" : {
+        "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2_Legalities ",
+        "alchemy" : "NOT_LEGAL",
+        "brawl" : "NOT_LEGAL",
+        "commander" : "LEGAL",
+        "duel" : "LEGAL",
+        "explorer" : "NOT_LEGAL",
+        "future" : "NOT_LEGAL",
+        "gladiator" : "NOT_LEGAL",
+        "historic" : "NOT_LEGAL",
+        "historicbrawl" : "NOT_LEGAL",
+        "legacy" : "LEGAL",
+        "modern" : "NOT_LEGAL",
+        "oldschool" : "NOT_LEGAL",
+        "pauper" : "LEGAL",
+        "paupercommander" : "LEGAL",
+        "penny" : "NOT_LEGAL",
+        "pioneer" : "NOT_LEGAL",
+        "premodern" : "LEGAL",
+        "standard" : "NOT_LEGAL",
+        "vintage" : "LEGAL"
+    },
+    "mtgSet" : "ice",
+    "mtgSetName" : "Ice Age",
+    "collectorNumber" : "18",
+    "rarity" : "COMMON",
+    "scryfallId" : "21a815ed-c8b4-4414-8b27-ea612e2977e2",
+    "_class" : "com.rezatron.mtgprice.entity.wizards.Card",
+    "prices" : [
+        {
+            "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2_2022-10-12T05:04:57.000-04:00",
+            "eur" : 0.05,
+            "usd" : 0.09
+        },
+        {
+            "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2_2022-10-11T05:05:35.000-04:00",
+            "eur" : 0.05,
+            "usd" : 0.09
+        },
+        {
+            "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2_2022-10-10T17:08:12.000-04:00",
+            "eur" : 1.12,
+            "usd" : 0.09
+        },
+        {
+            "_id" : "21a815ed-c8b4-4414-8b27-ea612e2977e2_2022-10-10T05:04:52.000-04:00",
+            "eur" : 1.12,
+            "usd" : 0.09
+        }
+    ]
+}

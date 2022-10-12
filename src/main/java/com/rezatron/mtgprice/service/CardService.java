@@ -1,15 +1,12 @@
 package com.rezatron.mtgprice.service;
 
 import com.rezatron.mtgprice.entity.wizards.Card;
-import com.rezatron.mtgprice.entity.wizards.Printing;
 import com.rezatron.mtgprice.repository.CardRepository;
-import com.rezatron.mtgprice.repository.PrintingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -19,8 +16,6 @@ class CardService {
     @Autowired
     CardRepository cardRepository;
 
-    @Autowired
-    PrintingRepository printingRepository;
 
     @Transactional( readOnly = true )
     public
@@ -29,26 +24,6 @@ class CardService {
                   id );
         return cardRepository.findById( id ).orElse( null );
     }
-
-    @Transactional( readOnly = true )
-    public
-    Card findByPrintingId(String cardId, String printingId) {
-        log.info( "findByPrintingId {}.",
-                  printingId );
-        Card card = findById( cardId );
-        if (card == null) return null;
-        Object temp = printingRepository.findByPrintingId( printingId );
-        return null;
-    }
-
-    @Transactional( readOnly = true )
-    public
-    List<Printing> findByIdIn(Collection<String> ids) {
-        log.info( "cardfindByIdIn {}.",
-                  ids.size() );
-        return null;
-    }
-
 
     @Transactional( readOnly = true )
     public
