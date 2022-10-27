@@ -64,9 +64,11 @@ class ScryfallController {
         if (fileLocation == null) {
             log.info( "no file location was given." );
             fileLocation = scryfallService.downloadData();
+            if (fileLocation == null) {
+                return ResponseEntity.status( HttpStatus.ALREADY_REPORTED ).body( "No need to perform update." );
+            }
             log.info( "File is now \t {}.",
                       fileLocation );
-
         }
         String file = null;
         try {

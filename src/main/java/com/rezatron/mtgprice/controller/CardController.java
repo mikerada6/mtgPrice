@@ -33,5 +33,14 @@ class CardController {
         return ResponseEntity.status( HttpStatus.OK ).body( card );
     }
 
+    @GetMapping( "count" )
+    public
+    ResponseEntity getCard()
+    {
+        long cardCount = cardService.count( );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( cardCount );
+    }
+
 
 }

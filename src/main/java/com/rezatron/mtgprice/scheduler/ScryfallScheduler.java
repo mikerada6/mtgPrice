@@ -25,25 +25,4 @@ class ScryfallScheduler {
         scryfallController.bulkDataUpdate( null );
         log.info( "scheduled task done." );
     }
-
-    @Scheduled( cron = "* * * * * *" )
-    @SchedulerLock( name = "ScryfallScheduler_schedulerLockTest",
-                    lockAtLeastForString = "PT5M",
-                    lockAtMostForString = "PT59M" )
-    public
-    void schedulerLockTest() {
-        log.info( "schedulerLockTest." );
-    }
-
-
-    @Scheduled( cron = "0 15 1,13 * * *" )
-    @SchedulerLock( name = "ScryfallScheduler_reloadFromBackUp",
-                    lockAtLeastForString = "PT5M",
-                    lockAtMostForString = "PT59M" )
-    public
-    void reloadFromBackUp() {
-        log.info( "Running schedule reloadFromBackUp." );
-        scryfallController.reloadFromBackUp();
-        log.info( "scheduled task done." );
-    }
 }

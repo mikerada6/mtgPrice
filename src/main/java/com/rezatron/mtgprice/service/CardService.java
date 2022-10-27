@@ -30,4 +30,9 @@ class CardService {
     List<String> findIdsNotInDatabase(List<String> ids) {
         return cardRepository.findIdsNotInDatabase( ids );
     }
+
+    public
+    long count() {
+        return cardRepository.count();
+    }
 }
