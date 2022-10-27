@@ -11,6 +11,5 @@ import lombok.ToString;
 public
 class PriceUpdate {
     private String cardId;
-    private String printingId;
     private Price price;
 }

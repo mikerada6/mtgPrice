@@ -1,7 +1,6 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.service.FileService;
-import com.rezatron.mtgprice.service.ImageService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -10,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith( MockitoExtension.class )
 class ImageControllerTest {
 
-    @Mock
-    ImageService imageService;
     @Mock
     FileService fileService;
     @InjectMocks

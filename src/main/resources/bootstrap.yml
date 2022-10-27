@@ -1,0 +1,7 @@
+spring:
+  application.na:
+    name: mtgPrice
+  cloud:
+    config:
+      token: hvs.ZbkCi0D1sgDBzRm3pHlTP38D
+      uri: http://localhost:8888

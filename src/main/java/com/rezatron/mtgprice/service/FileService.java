@@ -48,15 +48,8 @@ class FileService {
         } catch (IOException e) {
             log.error( "Could not load file {}.",
                        file );
-            throw e;
+            return null;
         }
-    }
-
-    private
-    boolean doesFolderExist(String folderPath)
-    {
-        File directory = new File( folderPath );
-        return directory.exists();
     }
 
     public

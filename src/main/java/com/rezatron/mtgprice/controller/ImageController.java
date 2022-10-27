@@ -1,7 +1,6 @@
 package com.rezatron.mtgprice.controller;
 
 import com.rezatron.mtgprice.service.FileService;
-import com.rezatron.mtgprice.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +18,6 @@ import java.util.Arrays;
 @Slf4j
 public
 class ImageController {
-    @Autowired
-    ImageService imageService;
     @Autowired
     FileService fileService;
 
